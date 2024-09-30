@@ -177,5 +177,92 @@ void QS(int a[], int c, int f){
             a[j] = t;      // Coloca 'a[i]' na posição 'j' (efetuando a troca).
 
             // Incrementa o índice 'i' e decrementa 'j' para continuar a partição.
-          # Introdução a Ciência da Computação 2
+
 ```
+
+## Counting Sort
+
+O **Counting Sort** é um algoritmo de ordenação baseado em contagem de ocorrências, eficiente principalmente para ordenar elementos inteiros em um intervalo limitado. Ele não utiliza comparações entre elementos como a maioria dos algoritmos de ordenação clássicos (como o Merge Sort ou o Quick Sort), mas sim distribui os elementos diretamente em posições corretas com base em suas frequências.
+
+### Como funciona?
+
+O Counting Sort segue três passos principais: **contagem**, **acumulação** e **ordenamento final**.
+
+1. **Contagem de Frequências**:
+   - O algoritmo percorre o array de entrada e conta quantas vezes cada valor aparece. Esses valores são armazenados em um array auxiliar chamado `count[]`, onde cada índice representa um valor do array original, e cada posição do array `count[]` guarda a quantidade de vezes que esse valor ocorre.
+
+2. **Acumulação**:
+   - O próximo passo é modificar o array de contagem (`count[]`) para armazenar a posição de cada valor no array ordenado. Para fazer isso, soma-se os valores cumulativamente no array de contagem.
+
+3. **Construção do Array de Saída**:
+   - O último passo consiste em percorrer o array de entrada novamente e, com base nos valores do array `count[]`, colocar os elementos de entrada em suas posições corretas no array de saída.
+
+### Passo a Passo do Algoritmo
+
+#### 1. Entrada
+
+Dado o array de entrada:
+```plaintext
+Entrada: [4, 2, 2, 8, 3, 3, 1]
+```
+
+#### 2. Contagem de Frequências
+
+Cria-se um array `count[]` que conta a frequência de cada elemento:
+```plaintext
+count[] = [0, 1, 2, 2, 1, 0, 0, 0, 1] 
+```
+Isso indica, por exemplo, que o número `1` aparece 1 vez, o número `2` aparece 2 vezes, o número `3` aparece 2 vezes, e assim por diante.
+
+#### 3. Acumulação
+
+Agora, acumulamos os valores no array de contagem, para indicar as posições finais dos elementos:
+```plaintext
+count[] = [0, 1, 3, 5, 6, 6, 6, 6, 7]
+```
+Aqui, o valor `1` estará na posição 1, o valor `2` começa na posição 3, o valor `3` começa na posição 5, e o valor `8` estará na posição 7.
+
+#### 4. Construção do Array de Saída
+
+Finalmente, percorremos o array de entrada e colocamos os valores nas posições corretas no array de saída:
+```plaintext
+Saída: [1, 2, 2, 3, 3, 4, 8]
+```
+
+### Complexidade do Counting Sort
+
+O Counting Sort tem uma complexidade de tempo e espaço distinta, dependendo de duas variáveis: o número de elementos no array (`n`) e o maior valor presente no array (`k`).
+
+#### Complexidade de Tempo:
+
+- **Fase de Contagem**: O algoritmo percorre o array de entrada para contar a frequência de cada valor, o que leva tempo **O(n)**, onde `n` é o número de elementos.
+- **Fase de Acumulação**: Para calcular as posições finais dos elementos, percorremos o array de contagem de tamanho `k`. Isso leva tempo **O(k)**.
+- **Construção do Array de Saída**: Novamente, o algoritmo percorre o array de entrada para preencher o array de saída ordenado, o que leva mais tempo **O(n)**.
+
+No geral, a complexidade de tempo do Counting Sort é **O(n + k)**, onde:
+- `n` é o número de elementos no array.
+- `k` é o valor máximo no array de entrada.
+
+#### Complexidade de Espaço:
+
+- O Counting Sort utiliza um array de contagem com tamanho **k + 1**, onde `k` é o valor máximo do array. Portanto, a complexidade de espaço também é **O(n + k)**, pois precisamos armazenar tanto o array de contagem quanto o array de saída.
+
+### Comparação com Outros Algoritmos de Ordenação
+
+Aqui está a tabela comparando as complexidades de tempo do **Counting Sort**, **Merge Sort**, **Radix Sort** e **Bubble Sort** em seus piores, médios e melhores casos:
+
+| Caso  | Counting Sort     | Merge Sort      | Quick Sort     | Bubble Sort |
+|:-----:|:-----------------:|:---------------:|:--------------:|:-----------:|
+| Pior  | O(n + k)          | O(nLog(n))      | O(n²)       | O(n²)       |
+| Médio | O(n + k)          | O(nLog(n))      | O(nLog(n))       | O(n²)       |
+| Melhor| O(n + k)          | O(nLog(n))      | O(nLog(n))       | O(n)        |
+
+### Quando Usar Counting Sort?
+
+- **Intervalo Pequeno**: Counting Sort é mais eficiente que algoritmos de ordenação baseados em comparação quando o intervalo de valores (`k`) é pequeno em comparação ao número de elementos (`n`).
+- **Dados Inteiros**: É ideal para ordenar listas de números inteiros não negativos ou dados que possam ser mapeados para números inteiros.
+- **Estabilidade**: Counting Sort é estável, o que significa que mantém a ordem relativa de elementos com o mesmo valor.
+
+### Implementação do Counting Sort 
+    
+
