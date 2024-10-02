@@ -1,6 +1,21 @@
 # Introdução a Ciência da Computação 2
 
 
+## Sumário
+
+- [Bubble Sort](#bubble-sort) ✅
+- [Insertion Sort](#insertion-sort) ✅
+- [Selection Sort](#selection-sort) ❌
+- [Merge Sort](#merge-sort) ❌
+- [Heap Sort](#heap-sort) ❌
+- [Shell Sort](#shell-sort) ❌
+- [Quick Sort](#quick-sort) ✅
+- [Counting Sort](#counting-sort) ✅
+- [Complexidade](#complexidade) ✅
+
+
+
+
 ## Bubble Sort
 
 ### Como funciona?
@@ -8,10 +23,9 @@ Bubble Sort é um dos algoritmos de ordenação mais simples e intuitivos, apesa
 
 Mesmo com sua simplicidade, o **Bubble Sort** tem uma desvantagem significativa em termos de eficiência, pois no pior caso, sua complexidade é **O(n²)**. Devido a essa ineficiência, ele é raramente utilizado na prática quando comparado a algoritmos mais avançados como **Quick Sort** ou **Merge Sort**.
 
-### Funcionamento do Bubble Sort:
 A ideia básica do Bubble Sort é percorrer o array várias vezes e realizar comparações de pares de elementos adjacentes, realizando trocas quando necessário, até que a lista esteja ordenada. Cada passagem "empurra" o maior elemento ainda não ordenado para sua posição correta no final do array.
 
-#### Etapas do Bubble Sort:
+### Etapas do Bubble Sort:
 
 1. **Comparação de Pares**: 
    - A cada iteração, o algoritmo compara pares de elementos consecutivos no array. Se o elemento à esquerda é maior que o da direita, ocorre uma troca.
@@ -25,7 +39,7 @@ A ideia básica do Bubble Sort é percorrer o array várias vezes e realizar com
 4. **Verificação de Trocas**:
    - O algoritmo pode ser otimizado para interromper a ordenação se, em uma passagem completa, nenhuma troca ocorrer. Isso significa que o array já está ordenado.
 
-#### Exemplo:
+### Exemplo:
 Dado o array `[5, 2, 9, 1, 5, 6]`, o Bubble Sort funcionaria da seguinte forma:
 
 1. Primeira passagem: `[5, 2, 9, 1, 5, 6]` → `[2, 5, 1, 5, 6, 9]` (9 flutua para a posição correta)
@@ -34,18 +48,8 @@ Dado o array `[5, 2, 9, 1, 5, 6]`, o Bubble Sort funcionaria da seguinte forma:
 
 O array já está ordenado após três passagens.
 
-#### Importância:
+### Importância:
 Apesar de sua simplicidade, o **Bubble Sort** não é utilizado em aplicações que requerem alto desempenho devido à sua ineficiência para grandes conjuntos de dados. Seu uso prático é limitado a casos educacionais ou situações em que a lista a ser ordenada é muito pequena.
-
-### Complexidade do Bubble Sort comparado a outros métodos
-
-| Caso  | Bubble Sort        | Quick Sort      | Insertion Sort  |
-|:-----:|:------------------:|:---------------:|:---------------:|
-| Pior  |        O(n²)       | O(n²)           | O(n²)           |
-| Médio |        O(n²)       | O(nLog(n))      | O(n²)           |
-| Melhor|        O(n)        | O(nLog(n))      | O(n)            |
-
-No **melhor caso**, quando o array já está ordenado, o Bubble Sort pode ser eficiente com complexidade **O(n)**, mas no caso médio e no pior caso, seu desempenho é **O(n²)**.
 
 ### Implementação do Método
 
@@ -85,6 +89,77 @@ void bubbleSort(int a[], int n) {
 1. **Laços**: O algoritmo utiliza dois laços aninhados. O laço externo controla o número de passagens pelo array, enquanto o laço interno realiza as comparações e trocas de elementos adjacentes.
 2. **Verificação de Trocas**: A variável `swapped` controla se houve ou não trocas durante uma passagem. Se não houver trocas, o laço externo é interrompido, indicando que o array já está ordenado.
 3. **Trocas**: Quando dois elementos estão fora de ordem (ou seja, o elemento da esquerda é maior que o da direita), ocorre uma troca.
+
+
+## Insertion Sort
+
+### Como funciona?
+O algoritmo insertion sort, também conhecido por ordenação por "inserção", ele tem esse nome pois se assemelha a forma de organização de um conjunto de cartas em mão: pega uma carta de cada vez e a "insere" em seu devido lugar, sempre deixando as cartas da mão em ordem. Na prática, este algoritmo possui um **desempenho superior** quando comparado aos outros algoritmos simples (bubble e selection).
+
+O principio de funcionamento deste algoritmo é a inserção de um elemento de array na sua posição correta. para entender esse processo imagine um conjunto de valores não ordenado no qual você irá percorrer o array e, a cada iteração, retirar o elemento atual e inseri-lo em sua posição correta com relação aos elementos anteriores. Esse processo continua até que todos os elementos estejam ordenados.
+
+Aqui está um passo a passo de como o Insertion Sort funciona:
+
+1. **Inicialização**: Comece do segundo elemento do array, já que o primeiro, por definição, é considerado ordenado.
+2. **Seleção do elemento**: Pegue o elemento atual (chamado de chave) e compare-o com os elementos à esquerda (ou anteriores no array).
+3. **Movimentação de elementos**: Se o elemento da esquerda for maior que a chave, mova-o uma posição à direita para abrir espaço.
+4. **Inserção**: Coloque a chave na posição correta (onde os elementos à esquerda são menores e os à direita são maiores).
+5. **Repetição**: Repita o processo para todos os elementos restantes do array.
+
+### Exemplo:
+Suponha que você tem o array `[5, 3, 4, 1, 2]`. O processo de ordenação será:
+
+- Iteração 1: Elemento chave = 3, array = `[5, 3, 4, 1, 2]`
+  - Compare com 5, mova o 5 para a direita. Array = `[5, 5, 4, 1, 2]`
+  - Insira 3. Array = `[3, 5, 4, 1, 2]`
+  
+- Iteração 2: Elemento chave = 4, array = `[3, 5, 4, 1, 2]`
+  - Compare com 5, mova o 5 para a direita. Array = `[3, 5, 5, 1, 2]`
+  - Insira 4. Array = `[3, 4, 5, 1, 2]`
+
+- Iteração 3: Elemento chave = 1, array = `[3, 4, 5, 1, 2]`
+  - Compare com 5, mova o 5. Array = `[3, 4, 5, 5, 2]`
+  - Compare com 4, mova o 4. Array = `[3, 4, 4, 5, 2]`
+  - Compare com 3, mova o 3. Array = `[3, 3, 4, 5, 2]`
+  - Insira 1. Array = `[1, 3, 4, 5, 2]`
+
+- Iteração 4: Elemento chave = 2, array = `[1, 3, 4, 5, 2]`
+  - Compare com 5, mova o 5. Array = `[1, 3, 4, 5, 5]`
+  - Compare com 4, mova o 4. Array = `[1, 3, 4, 4, 5]`
+  - Compare com 3, mova o 3. Array = `[1, 3, 3, 4, 5]`
+  - Insira 2. Array = `[1, 2, 3, 4, 5]`
+
+Agora o array está ordenado.
+
+### Implementação do Insertion Sort
+
+```c
+void insertionsort(int vet[], int n) {
+    int atual, posmenor;
+
+    // Loop para percorrer todos os elementos do vetor, começando do segundo elemento
+    for (int i = 1; i < n; i++) { 
+        atual = vet[i]; // O elemento atual a ser inserido na posição correta
+
+        // Move os elementos que são maiores que o atual para a direita
+        for (posmenor = i; (posmenor > 0) && (atual < vet[posmenor - 1]); posmenor--) {
+            vet[posmenor] = vet[posmenor - 1]; // Desloca o elemento para a direita
+        }
+        vet[posmenor] = atual; // Insere o elemento atual na posição correta
+    }
+}
+
+```
+
+
+
+## Selection Sort
+
+### Como funciona?
+Sua eficiência diminui drasticamente à medida que o número de elementos do array aumenta, não sendo recomendado para aplicações que envolvam grandes quantidades de dados ou que precisem de velocidade. Considerando um array de **N** elementos, o tempo de execução do 
+## Merge Sort
+## Heap Sort
+## Shell Sort
 
 ## Quick Sort
 
@@ -126,15 +201,6 @@ O particionamento é o coração do **Quick Sort**, e a eficiência do algoritmo
 - **Mediana de Três**: Usa a mediana de três elementos para uma divisão mais balanceada.
 
 O particionamento bem-sucedido é o que garante a eficiência do Quick Sort na maioria dos cenários práticos.
-
-
-### Complexidade do QS comparado a outros métodos
-
-| Caso  | Quick Sort         | Insertion Sort  | Heap Sort |
-|:-----:|:------------------:|:---------------:|:---------:|
-| Pior  |        O(n²)       | O(n²)           |O(nLog(n)) |
-| Médio |         O(nLog(n)) | O(n²)           |O(nLog(n)) |
-| Melhor|       O(nLog(n))   | O(n)            |O(nLog(n)) |
 
 
 ### Implementação do Método
@@ -243,20 +309,6 @@ No geral, a complexidade de tempo do Counting Sort é **O(n + k)**, onde:
 - `n` é o número de elementos no array.
 - `k` é o valor máximo no array de entrada.
 
-#### Complexidade de Espaço:
-
-- O Counting Sort utiliza um array de contagem com tamanho **k + 1**, onde `k` é o valor máximo do array. Portanto, a complexidade de espaço também é **O(n + k)**, pois precisamos armazenar tanto o array de contagem quanto o array de saída.
-
-### Comparação com Outros Algoritmos de Ordenação
-
-Aqui está a tabela comparando as complexidades de tempo do **Counting Sort**, **Merge Sort**, **Radix Sort** e **Bubble Sort** em seus piores, médios e melhores casos:
-
-| Caso  | Counting Sort     | Merge Sort      | Quick Sort     | Bubble Sort |
-|:-----:|:-----------------:|:---------------:|:--------------:|:-----------:|
-| Pior  | O(n + k)          | O(nLog(n))      | O(n²)       | O(n²)       |
-| Médio | O(n + k)          | O(nLog(n))      | O(nLog(n))       | O(n²)       |
-| Melhor| O(n + k)          | O(nLog(n))      | O(nLog(n))       | O(n)        |
-
 ### Quando Usar Counting Sort?
 
 - **Intervalo Pequeno**: Counting Sort é mais eficiente que algoritmos de ordenação baseados em comparação quando o intervalo de valores (`k`) é pequeno em comparação ao número de elementos (`n`).
@@ -264,5 +316,100 @@ Aqui está a tabela comparando as complexidades de tempo do **Counting Sort**, *
 - **Estabilidade**: Counting Sort é estável, o que significa que mantém a ordem relativa de elementos com o mesmo valor.
 
 ### Implementação do Counting Sort 
+
+
+## Complexidade
+
+### Tabela de Complexidade dos Algoritmos de Ordenação
+
+| Algoritmo         | Melhor Caso  | Caso Médio   | Pior Caso    | Complexidade de Espaço | Estável?  | Comparativo? |
+|-------------------|--------------|--------------|--------------|------------------------|-----------|--------------|
+| **Bubble Sort**    | O(n)         | O(n^2)       | O(n^2)       | O(1)                   | Sim       | Sim          |
+| **Insertion Sort** | O(n)         | O(n^2)       | O(n^2)       | O(1)                   | Sim       | Sim          |
+| **Selection Sort** | O(n^2)       | O(n^2)       | O(n^2)       | O(1)                   | Não       | Sim          |
+| **Merge Sort**     | O(n log n)   | O(n log n)   | O(n log n)   | O(n)                   | Sim       | Sim          |
+| **Heap Sort**      | O(n log n)   | O(n log n)   | O(n log n)   | O(1)                   | Não       | Sim          |
+| **Shell Sort**     | O(n log n)   | O(n^{3/2})   | O(n^2)       | O(1)                   | Não       | Sim          |
+| **Quick Sort**     | O(n log n)   | O(n log n)   | O(n^2)       | O(log n)               | Não       | Sim          |
+| **Counting Sort**  | O(n + k)     | O(n + k)     | O(n + k)     | O(k)                   | Sim       | Não          |
+
+
+
+### Explicação Detalhada
+
+#### 1. **Bubble Sort**
+   - **Funcionamento**: Compara pares de elementos adjacentes e os troca se estiverem fora de ordem. O processo é repetido até que o array esteja ordenado.
+   - **Complexidade**:
+     - Melhor caso: \( O(n) \) (array já ordenado).
+     - Caso médio e pior caso: \( O(n^2) \) (array desordenado ou em ordem inversa).
+   - **Espaço**: \( O(1) \), já que não usa memória extra além do array.
+   - **Estável**: Sim, mantém a ordem relativa de elementos iguais.
+   - **Comparativo**: Sim, pois realiza comparações entre os elementos.
+
+#### 2. **Insertion Sort**
+   - **Funcionamento**: Insere cada elemento em sua posição correta, comparando com os anteriores. Funciona bem para arrays pequenos ou quase ordenados.
+   - **Complexidade**:
+     - Melhor caso: \( O(n) \) (array já ordenado).
+     - Caso médio e pior caso: \( O(n^2) \).
+   - **Espaço**: \( O(1) \).
+   - **Estável**: Sim.
+   - **Comparativo**: Sim.
+
+#### 3. **Selection Sort**
+   - **Funcionamento**: Seleciona o menor (ou maior) elemento e o coloca na posição correta. Repetido para cada elemento.
+   - **Complexidade**:
+     - Melhor, médio e pior caso: \( O(n^2) \).
+   - **Espaço**: \( O(1) \).
+   - **Estável**: Não, pois pode trocar elementos iguais de posição.
+   - **Comparativo**: Sim.
+
+#### 4. **Merge Sort**
+   - **Funcionamento**: Divide o array em duas metades, ordena cada metade e as mescla. É um algoritmo de divisão e conquista.
+   - **Complexidade**:
+     - Melhor, médio e pior caso: \( O(n \log n) \).
+   - **Espaço**: \( O(n) \), precisa de memória extra para a mesclagem.
+   - **Estável**: Sim.
+   - **Comparativo**: Sim.
+
+#### 5. **Heap Sort**
+   - **Funcionamento**: Constrói uma heap e, em seguida, extrai o maior elemento (ou menor) para ordenar o array.
+   - **Complexidade**:
+     - Melhor, médio e pior caso: \( O(n \log n) \).
+   - **Espaço**: \( O(1) \).
+   - **Estável**: Não.
+   - **Comparativo**: Sim.
+
+#### 6. **Shell Sort**
+   - **Funcionamento**: Uma generalização do *Insertion Sort* que permite a troca de elementos que estão longe um do outro. Usa intervalos que diminuem com o tempo.
+   - **Complexidade**:
+     - Melhor caso: \( O(n \log n) \).
+     - Caso médio: \( O(n^{3/2}) \) (depende da escolha da sequência de incrementos).
+     - Pior caso: \( O(n^2) \).
+   - **Espaço**: \( O(1) \).
+   - **Estável**: Não.
+   - **Comparativo**: Sim.
+
+#### 7. **Quick Sort**
+   - **Funcionamento**: Escolhe um pivô, particiona o array em dois subarrays (elementos menores e maiores que o pivô), e ordena recursivamente.
+   - **Complexidade**:
+     - Melhor e caso médio: \( O(n \log n) \).
+     - Pior caso: \( O(n^2) \) (quando o pivô escolhido é sempre o menor ou maior elemento).
+   - **Espaço**: \( O(\log n) \) (devido à recursão).
+   - **Estável**: Não.
+   - **Comparativo**: Sim.
+
+#### 8. **Counting Sort**
+   - **Funcionamento**: Conta o número de ocorrências de cada valor e usa essas contagens para ordenar o array. Funciona apenas para inteiros ou dados discretos com alcance limitado.
+   - **Complexidade**:
+     - Melhor, médio e pior caso: \( O(n + k) \), onde \( k \) é o maior valor no array.
+   - **Espaço**: \( O(k) \), onde \( k \) é o intervalo de valores.
+   - **Estável**: Sim.
+   - **Comparativo**: Não, pois não faz comparações entre elementos.
+
+### Conclusão
+
+- **Algoritmos como Merge Sort e Quick Sort** são mais eficientes para grandes conjuntos de dados, com complexidade \( O(n \log n) \), mas o Quick Sort pode ter o pior caso \( O(n^2) \).
+- **Algoritmos simples como Bubble, Selection e Insertion Sort** são mais fáceis de implementar, mas ineficazes para grandes entradas devido à sua complexidade \( O(n^2) \).
+- **Counting Sort** é eficiente para intervalos limitados de valores inteiros, com complexidade \( O(n + k) \).
     
 

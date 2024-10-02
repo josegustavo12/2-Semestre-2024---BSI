@@ -11,58 +11,57 @@ void shell(int v[], int n) {
     }
     gap = gap / 2 - 1;
     while(gap > 0) {
-            for (int i = gap; i < n; i++){
-                int x = v[i];
-                oper_shell++;
-                int j = i - gap;
-                while(j >= 0 && v[j] > x) {
-                    oper_shell++;
-                    v[j + gap] = v[j];
-                    oper_shell++;
-                    j -= gap;
-                }
-                if(j >= 0){
-                    oper_shell++;
-                }
-                v[j + gap] = x;
-                oper_shell++;
-
+        for (int i = gap; i < n; i++){
+            int x = v[i];
+            oper_shell++;  // (1) Contagem da atribuição de v[i] para x
+            int j = i - gap;
+            while(j >= 0 && v[j] > x) {
+                oper_shell++;  // (2) Comparação v[j] > x
+                v[j + gap] = v[j];
+                oper_shell++;  // (3) Atribuição de v[j] para v[j + gap]
+                j -= gap;
             }
+            if(j >= 0){
+                oper_shell++;  // (4) Contagem da comparação do "if" final
+            }
+            v[j + gap] = x;
+            oper_shell++;  // (5) Atribuição de x para v[j + gap]
+        }
         gap /= 2;
     }
 }
 
 void quick(int v[], int f, int l) {
-        if (f >= l) {
-            return;
+    if (f >= l) {
+        return;
+    }
+    int m = (l + f) / 2;
+    int pivot = v[m];
+    oper_quick++;  // (1) Atribuição do pivô
+    int i = f;
+    int j = l;
+    while(1) {
+        while(v[i] < pivot) {
+            oper_quick++;  // (2) Comparação v[i] < pivot
+            i++;
         }
-        int m = (l + f)/2;
-        int pivot = v[m];
-        oper_quick++;
-        int i = f;
-        int j = l;
-        while(1) {
-                while(v[i] < pivot) {
-                    oper_quick++;
-                    i++;
-                }
-                while(v[j] > pivot) {
-                    oper_quick++;
-                    j--;
-                }
-                oper_quick += 2;
-                if (i >= j) {
-                        break;
-                }
-                int aux = v[i];
-                v[i] = v[j];
-                v[j] = aux;
-                oper_quick += 3;
-                i++;
-                j--;
+        while(v[j] > pivot) {
+            oper_quick++;  // (3) Comparação v[j] > pivot
+            j--;
         }
-        quick(v, f, j);
-        quick(v, j+1, l);
+        oper_quick += 2;  // (4) Contagem das comparações finais que saem dos laços
+        if (i >= j) {
+            break;
+        }
+        int aux = v[i];
+        v[i] = v[j];
+        v[j] = aux;
+        oper_quick += 3;  // (5) Troca de v[i] e v[j], contando as atribuições
+        i++;
+        j--;
+    }
+    quick(v, f, j);      // Chamadas recursivas
+    quick(v, j + 1, l);
 }
 
 void printVet(int* vet, int n) {
