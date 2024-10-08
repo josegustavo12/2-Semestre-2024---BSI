@@ -117,5 +117,63 @@ uso:
 * * **Planejamento** da integração do sistema.
 * * **Definição** dos casos de teste.
 
+# Aula 6
 
+## Desenvolvimento Ágil
+### Motivação
+Quais são os problemas normalmente encontrados em processo de desenvolvimento tradicional?  
+* Escopo
+* Estimativa
+* Esforço
+* Mudança
+* Adequação a necessidade do cliente 
+* Visualização tardia
+* Envolvimento do cliente 
+* Aceite
+
+### O que é "Agilidade"?
+* **Agilidade**
+* * Rapidez, Desembaraço
+* * Qualidade de quem é veloz
+* **Capacidade de responder rapidamente a mudanças.** 
+* * Mudanças de tecnologias, de equipe, de requisitos
+* **Entregar valor ao cliente quando se lida com imprevisibilidade e dinamismo dos projetos.**
+
+### Manifesto Ágil
+
+![](fotos/manifestoagil.png)
+
+* **Estamos descobrindo melhores formas de desenvolver software através da nossa própria prática e auxiliando outros.**
+
+#### 4 Valores do Manifesto Ágil
+
+| Valores                          | Ágil                    | Tradicional                    |
+|-----------------------------------|-------------------------|--------------------------------|
+| Interação entre **indivíduos         |** mais do que             | Processos e ferramentas        |
+| Produto funcionando                | mais do que             | Documentação extensa           |
+| Colaboração com o cliente          | mais do que             | Termos negociados (contrato)   |
+| Resposta às mudanças               | mais do que             | Cumprimento de planos          |
+
+
+#### 12 Princípios da Agilidade
+1. A mais alta prioridade é **satisfazer o cliente**, por meio da **liberação rápida** e contínua de software de valor.
+2. **Receba bem as mudanças de requisitos**, mesmo em estágios tardios de desenvolvimento. Processos ágeis devem admitir mudanças que trazem vantagens competitivas para o cliente.
+3. **Liberar software frequentemente**, em intervalos de 2 semanas até meses, dando preferência ao menor tempo entre releases.
+4. Manter pessoas ligadas ao **negócio e desenvolvedores trabalhando juntos** o maior parte do tempo do projeto.
+5. Construa projetos com **indivíduos motivados**, dê a eles o ambiente e o suporte que precisam e confie neles para fazer o trabalho realizado.
+6. O método mais eficiente e eficaz de repassar informações entre equipe de desenvolvimento é pela **comunicação face a face.**
+7. O **software funcionando** é a principal medida de **progresso em um projeto** de software.
+8. Os processos ágeis promovem o desenvolvimento sustentável. Assim, patrocinadores, desenvolvedores e usuários **devem ser capazes de manter convergência contínua indefinidamente**.
+9. A atenção contínua para a **excelência técnica e um bom projeto (design) aprimora a agilidade**.
+10. **Simplicidade** (ou seja, o máximo de trabalho não executado) é essencial.
+11. As melhores arquiteturas, requisitos e designs emergem de **equipes auto-organizadas.**
+12. Em intervalos regulares, **a equipe reflete sobre como se tornar mais eficaz**, e então ajustam e aperfeiçoam seu comportamento de acordo.
+
+#### Objetivo
+satisfazer o cliente entregando, rapidamente e com frequência, sistemas com algum valor.
+
+* Entregar versões funcionais em prazos curtos.
+* Estar preparado para requisitos mutantes. 
+* Pessoal de negócios e desenvolvedores juntos. 
+* Troca de informações por meio de conversas diretas.  
 

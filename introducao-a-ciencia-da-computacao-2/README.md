@@ -5,15 +5,13 @@
 
 - [Bubble Sort](#bubble-sort) ✅
 - [Insertion Sort](#insertion-sort) ✅
-- [Selection Sort](#selection-sort) ❌
+- [Selection Sort](#selection-sort) ✅
 - [Merge Sort](#merge-sort) ❌
 - [Heap Sort](#heap-sort) ❌
 - [Shell Sort](#shell-sort) ❌
 - [Quick Sort](#quick-sort) ✅
 - [Counting Sort](#counting-sort) ✅
 - [Complexidade](#complexidade) ✅
-
-
 
 
 ## Bubble Sort
@@ -156,8 +154,195 @@ void insertionsort(int vet[], int n) {
 ## Selection Sort
 
 ### Como funciona?
-Sua eficiência diminui drasticamente à medida que o número de elementos do array aumenta, não sendo recomendado para aplicações que envolvam grandes quantidades de dados ou que precisem de velocidade. Considerando um array de **N** elementos, o tempo de execução do 
+Ele funciona selecionando (por isso selection) o menor elemento do vetor e colocando na primeira posição, a cada iteração ele seleciona o menor não ordenado e vai colocando na posição menor não ordenada
+
+### Passo a passo de como o Selection Sort funciona:
+1. **Seleção do menor elemento:** Percorra a lista e encontre o menor elemento.
+2. **Troca de posição:** Troque esse menor elemento com o primeiro elemento da lista.
+3. **Repetição:** Repita o processo para o restante da lista, ignorando os elementos já ordenados.
+4. **Continuação:** Continue até que todos os elementos estejam na posição correta.
+
+### Selection Sort
+
+### Como funciona?
+O algoritmo **Selection Sort** (ou ordenação por seleção) é um dos algoritmos de ordenação mais simples. Ele funciona selecionando repetidamente o menor (ou maior, dependendo da ordem de classificação) elemento de uma lista e colocando-o em sua posição correta. O processo continua até que a lista esteja completamente ordenada.
+
+O **Selection Sort** não é o algoritmo de ordenação mais eficiente, mas é fácil de entender e implementar. Ele realiza a ordenação **in-place**, ou seja, não requer memória extra significativa além da lista original, e possui desempenho O(n²), o que o torna inadequado para listas muito grandes.
+
+### Passo a passo de como o Selection Sort funciona:
+
+1. **Seleção do menor elemento**: Percorra a lista e encontre o menor elemento.
+2. **Troca de posição**: Troque esse menor elemento com o primeiro elemento da lista.
+3. **Repetição**: Repita o processo para o restante da lista, ignorando os elementos já ordenados.
+4. **Continuação**: Continue até que todos os elementos estejam na posição correta.
+
+### Exemplo:
+Suponha que você tem o array `[5, 3, 4, 1, 2]`. O processo de ordenação será:
+
+- Iteração 1: Array = `[5, 3, 4, 1, 2]`
+  - Menor valor: 1, Troque 1 com 5.
+  - Array após troca: `[1, 3, 4, 5, 2]`
+
+- Iteração 2: Array = `[1, 3, 4, 5, 2]`
+  - Menor valor: 2, Troque 2 com 3.
+  - Array após troca: `[1, 2, 4, 5, 3]`
+
+- Iteração 3: Array = `[1, 2, 4, 5, 3]`
+  - Menor valor: 3, Troque 3 com 4.
+  - Array após troca: `[1, 2, 3, 5, 4]`
+
+- Iteração 4: Array = `[1, 2, 3, 5, 4]`
+  - Menor valor: 4, Troque 4 com 5.
+  - Array após troca: `[1, 2, 3, 4, 5]`
+
+Agora o array está ordenado.
+
+### Implementação do Selection Sort
+
+```c
+void selectionsort(int vet[], int n) {
+    int posmenor = 0; // posição do menor valor
+
+    for (int i = 0; i < n - 1 ; i++){ 
+
+        posmenor = i; // a medida que o laço for evoluindo a posicao inicial da posmenor vai ser igual a i
+        for (int j = i+1; j < n; j++){// for para percorrer o vetor e achar o menor valor
+        // j = i+1 -> ele sempre vai iniciar na posição +1 da primeira posição 
+
+            if (vet[j] < vet[posmenor]){
+                posmenor = j; // caso ele ache um vetor na posição j que seja menor que o vetor da posição posmenor, ele troca o posmenor para ser igual a j
+            }
+        }
+        swap(vet, posmenor, i); // função de trocar os elementos de lugar 
+    }
+}
+```
 ## Merge Sort
+### Como funciona?
+O Merge Sort é um algoritmo de ordenação baseado no princípio Dividir e Conquistar. Ele funciona dividindo repetidamente o array ao meio até que cada subarray tenha apenas um elemento, e então os subarrays são mesclados (merge) de forma ordenada para formar um array final ordenado. O Merge Sort é considerado mais eficiente que os algoritmos simples, como o Bubble Sort e o Selection Sort, pois seu desempenho é O(n log n) no pior caso, melhorando o processamento de listas grandes.
+
+### Passo a passo de como o Merge Sort funciona:
+1. **Divisão:** O array é dividido repetidamente ao meio até que cada subarray tenha apenas um elemento.
+2. **Conquista (Ordenação e Mesclagem):** Após a divisão, os subarrays são gradualmente mesclados de forma ordenada. Durante a mesclagem, os elementos de cada subarray são comparados, e o menor deles é adicionado a um array temporário.
+3. **Repetição:** O processo de mesclagem continua até que todos os subarrays sejam combinados em um único array ordenado.
+
+### Exemplo:
+Suponha que você tem o array `[5, 3, 4, 1, 2]`. O processo de ordenação será:
+
+1. **Divisão**:
+   - `[5, 3, 4, 1, 2]` é dividido em `[5, 3]` e `[4, 1, 2]`
+   - `[5, 3]` é dividido em `[5]` e `[3]`
+   - `[4, 1, 2]` é dividido em `[4]` e `[1, 2]`
+   - `[1, 2]` é dividido em `[1]` e `[2]`
+
+2. **Conquista (Mesclagem)**:
+   - `[5]` e `[3]` são mesclados em `[3, 5]`
+   - `[1]` e `[2]` são mesclados em `[1, 2]`
+   - `[4]` e `[1, 2]` são mesclados em `[1, 2, 4]`
+   - `[3, 5]` e `[1, 2, 4]` são mesclados em `[1, 2, 3, 4, 5]`
+
+Agora o array está ordenado.
+
+### Implementação do Merge Sort
+
+```c
+#include <stdio.h>
+
+void merge(int vet[], int l, int m, int r) {
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 = r - m;
+
+    // Vetores temporários
+    int L[n1], R[n2];
+
+    // Copiando os dados para os vetores temporários
+    for (i = 0; i < n1; i++)
+        L[i] = vet[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = vet[m + 1 + j];
+
+    // Mesclando os vetores temporários de volta no vetor original
+    i = 0; // Índice inicial do primeiro subvetor
+    j = 0; // Índice inicial do segundo subvetor
+    k = l; // Índice inicial do vetor mesclado
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            vet[k] = L[i];
+            i++;
+        } else {
+            vet[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copiando os elementos restantes de L[], se houver algum
+    while (i < n1) {
+        vet[k] = L[i];
+        i++;
+        k++;
+    }
+
+    // Copiando os elementos restantes de R[], se houver algum
+    while (j < n2) {
+        vet[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergesort(int vet[], int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+
+        // Ordena a primeira e a segunda metade
+        mergesort(vet, l, m);
+        mergesort(vet, m + 1, r);
+
+        // Mescla as duas metades ordenadas
+        merge(vet, l, m, r);
+    }
+}
+
+int main() {
+    int vet[] = {12, 11, 13, 5, 6, 7};
+    int vet_size = sizeof(vet) / sizeof(vet[0]);
+
+    printf("Array original: \n");
+    for (int i = 0; i < vet_size; i++)
+        printf("%d ", vet[i]);
+    printf("\n");
+
+    mergesort(vet, 0, vet_size - 1);
+
+    printf("\nArray ordenado: \n");
+    for (int i = 0; i < vet_size; i++)
+        printf("%d ", vet[i]);
+    printf("\n");
+
+    return 0;
+}
+```
+
+### Explicação do Código:
+
+1. **merge()**:
+   - A função `merge` mescla dois subarrays ordenados em um único subarray ordenado.
+   - Ela usa dois arrays temporários (`L[]` e `R[]`) para armazenar os elementos da primeira e da segunda metade do array, comparando-os e mesclando-os de volta no array original.
+
+2. **mergesort()**:
+   - A função `mergesort` é chamada recursivamente para dividir o array ao meio até que cada subarray tenha apenas um elemento. Depois, ela usa a função `merge` para mesclar os subarrays ordenados.
+   
+3. **main()**:
+   - O array `vet[]` é inicializado e o Merge Sort é aplicado a ele. O array original e o array ordenado são impressos no console para ilustrar o processo.
+
+### Vantagens do Merge Sort:
+
+- **Desempenho O(n log n)**: O Merge Sort é eficiente para grandes conjuntos de dados, com complexidade O(n log n), o que o torna mais rápido que algoritmos simples como Bubble Sort e Selection Sort.
+- **Estável**: O Merge Sort é um algoritmo de ordenação estável, ou seja, ele mantém a ordem relativa dos elementos iguais.
+- **Adequado para grandes arrays**: Por causa da divisão recursiva e da mesclagem eficiente, o Merge Sort é uma escolha excelente para grandes listas.
+
 ## Heap Sort
 ## Shell Sort
 
@@ -315,101 +500,117 @@ No geral, a complexidade de tempo do Counting Sort é **O(n + k)**, onde:
 - **Dados Inteiros**: É ideal para ordenar listas de números inteiros não negativos ou dados que possam ser mapeados para números inteiros.
 - **Estabilidade**: Counting Sort é estável, o que significa que mantém a ordem relativa de elementos com o mesmo valor.
 
-### Implementação do Counting Sort 
+### Implementação do Counting Sort
+
+## Radix Sort
+
 
 
 ## Complexidade
 
 ### Tabela de Complexidade dos Algoritmos de Ordenação
 
-| Algoritmo         | Melhor Caso  | Caso Médio   | Pior Caso    | Complexidade de Espaço | Estável?  | Comparativo? |
-|-------------------|--------------|--------------|--------------|------------------------|-----------|--------------|
-| **Bubble Sort**    | O(n)         | O(n^2)       | O(n^2)       | O(1)                   | Sim       | Sim          |
-| **Insertion Sort** | O(n)         | O(n^2)       | O(n^2)       | O(1)                   | Sim       | Sim          |
-| **Selection Sort** | O(n^2)       | O(n^2)       | O(n^2)       | O(1)                   | Não       | Sim          |
-| **Merge Sort**     | O(n log n)   | O(n log n)   | O(n log n)   | O(n)                   | Sim       | Sim          |
-| **Heap Sort**      | O(n log n)   | O(n log n)   | O(n log n)   | O(1)                   | Não       | Sim          |
-| **Shell Sort**     | O(n log n)   | O(n^{3/2})   | O(n^2)       | O(1)                   | Não       | Sim          |
-| **Quick Sort**     | O(n log n)   | O(n log n)   | O(n^2)       | O(log n)               | Não       | Sim          |
-| **Counting Sort**  | O(n + k)     | O(n + k)     | O(n + k)     | O(k)                   | Sim       | Não          |
-
-
+| Algoritmo         | Melhor Caso  | Caso Médio   | Pior Caso    | Complexidade de Espaço | Estável?  |
+|-------------------|--------------|---------------|--------------|------------------------|-----------|
+| **Bubble Sort**    | O(n)         | O(n²)       | O(n²)       | O(1)                   | Sim       |
+| **Insertion Sort** | O(n)         | O(n²)       | O(n²)       | O(1)                   | Sim       |
+| **Selection Sort** | O(n²)       | O(n²)       | O(n²)       | O(1)                   | Não       |
+| **Merge Sort**     | O(n log n)   | O(n log n)   | O(n log n)   | O(n)                   | Sim       |
+| **Heap Sort**      | O(n log n)   | O(n log n)   | O(n log n)   | O(1)                   | Não       |
+| **Shell Sort**     | O(n log n)   | O(n^{3/2})   | O(n²)       | O(1)                   | Não       |
+| **Quick Sort**     | O(n log n)   | O(n log n)   | O(n²)       | O(log n)               | Não       |
+| **Counting Sort**  | O(n + k)     | O(n + k)     | O(n + k)     | O(k)                   | Sim       |
 
 ### Explicação Detalhada
 
 #### 1. **Bubble Sort**
    - **Funcionamento**: Compara pares de elementos adjacentes e os troca se estiverem fora de ordem. O processo é repetido até que o array esteja ordenado.
    - **Complexidade**:
-     - Melhor caso: \( O(n) \) (array já ordenado).
-     - Caso médio e pior caso: \( O(n^2) \) (array desordenado ou em ordem inversa).
-   - **Espaço**: \( O(1) \), já que não usa memória extra além do array.
+     - Melhor caso: O(n) (array já ordenado).
+     - Caso médio e pior caso: O(n²) (array desordenado ou em ordem inversa).
+   - **Espaço**: O(1), já que não usa memória extra além do array.
    - **Estável**: Sim, mantém a ordem relativa de elementos iguais.
    - **Comparativo**: Sim, pois realiza comparações entre os elementos.
 
 #### 2. **Insertion Sort**
    - **Funcionamento**: Insere cada elemento em sua posição correta, comparando com os anteriores. Funciona bem para arrays pequenos ou quase ordenados.
    - **Complexidade**:
-     - Melhor caso: \( O(n) \) (array já ordenado).
-     - Caso médio e pior caso: \( O(n^2) \).
-   - **Espaço**: \( O(1) \).
+     - Melhor caso: O(n) (array já ordenado).
+     - Caso médio e pior caso: O(n²).
+   - **Espaço**: O(1).
    - **Estável**: Sim.
    - **Comparativo**: Sim.
 
 #### 3. **Selection Sort**
    - **Funcionamento**: Seleciona o menor (ou maior) elemento e o coloca na posição correta. Repetido para cada elemento.
    - **Complexidade**:
-     - Melhor, médio e pior caso: \( O(n^2) \).
-   - **Espaço**: \( O(1) \).
+     - Melhor, médio e pior caso: O(n²).
+   - **Espaço**: O(1).
    - **Estável**: Não, pois pode trocar elementos iguais de posição.
    - **Comparativo**: Sim.
 
 #### 4. **Merge Sort**
    - **Funcionamento**: Divide o array em duas metades, ordena cada metade e as mescla. É um algoritmo de divisão e conquista.
    - **Complexidade**:
-     - Melhor, médio e pior caso: \( O(n \log n) \).
-   - **Espaço**: \( O(n) \), precisa de memória extra para a mesclagem.
+     - Melhor, médio e pior caso: (O(n log n)).
+   - **Espaço**:O(n), precisa de memória extra para a mesclagem.
    - **Estável**: Sim.
    - **Comparativo**: Sim.
 
 #### 5. **Heap Sort**
    - **Funcionamento**: Constrói uma heap e, em seguida, extrai o maior elemento (ou menor) para ordenar o array.
    - **Complexidade**:
-     - Melhor, médio e pior caso: \( O(n \log n) \).
-   - **Espaço**: \( O(1) \).
+     - Melhor, médio e pior caso: O(n log n).
+   - **Espaço**: O(1).
    - **Estável**: Não.
    - **Comparativo**: Sim.
 
 #### 6. **Shell Sort**
    - **Funcionamento**: Uma generalização do *Insertion Sort* que permite a troca de elementos que estão longe um do outro. Usa intervalos que diminuem com o tempo.
    - **Complexidade**:
-     - Melhor caso: \( O(n \log n) \).
-     - Caso médio: \( O(n^{3/2}) \) (depende da escolha da sequência de incrementos).
-     - Pior caso: \( O(n^2) \).
-   - **Espaço**: \( O(1) \).
+     - Melhor caso: O(n \log n).
+     - Caso médio: O(n^(3/2)) (depende da escolha da sequência de incrementos).
+     - Pior caso: O(n²).
+   - **Espaço**: O(1).
    - **Estável**: Não.
    - **Comparativo**: Sim.
 
 #### 7. **Quick Sort**
    - **Funcionamento**: Escolhe um pivô, particiona o array em dois subarrays (elementos menores e maiores que o pivô), e ordena recursivamente.
    - **Complexidade**:
-     - Melhor e caso médio: \( O(n \log n) \).
-     - Pior caso: \( O(n^2) \) (quando o pivô escolhido é sempre o menor ou maior elemento).
-   - **Espaço**: \( O(\log n) \) (devido à recursão).
+     - Melhor e caso médio: O(n \log n).
+     - Pior caso: O(n²) (quando o pivô escolhido é sempre o menor ou maior elemento).
+   - **Espaço**: O(\log n) (devido à recursão).
    - **Estável**: Não.
    - **Comparativo**: Sim.
 
 #### 8. **Counting Sort**
    - **Funcionamento**: Conta o número de ocorrências de cada valor e usa essas contagens para ordenar o array. Funciona apenas para inteiros ou dados discretos com alcance limitado.
    - **Complexidade**:
-     - Melhor, médio e pior caso: \( O(n + k) \), onde \( k \) é o maior valor no array.
-   - **Espaço**: \( O(k) \), onde \( k \) é o intervalo de valores.
+     - Melhor, médio e pior caso: O(n + k), onde k é o maior valor no array.
+   - **Espaço**: O(k), onde k é o intervalo de valores.
    - **Estável**: Sim.
    - **Comparativo**: Não, pois não faz comparações entre elementos.
 
 ### Conclusão
 
-- **Algoritmos como Merge Sort e Quick Sort** são mais eficientes para grandes conjuntos de dados, com complexidade \( O(n \log n) \), mas o Quick Sort pode ter o pior caso \( O(n^2) \).
-- **Algoritmos simples como Bubble, Selection e Insertion Sort** são mais fáceis de implementar, mas ineficazes para grandes entradas devido à sua complexidade \( O(n^2) \).
-- **Counting Sort** é eficiente para intervalos limitados de valores inteiros, com complexidade \( O(n + k) \).
-    
+- **Algoritmos como Merge Sort e Quick Sort** são mais eficientes para grandes conjuntos de dados, com complexidade O(n \log n), mas o Quick Sort pode ter o pior caso O(n²).
+- **Algoritmos simples como Bubble, Selection e Insertion Sort** são mais fáceis de implementar, mas ineficazes para grandes entradas devido à sua complexidade O(n²).
+- **Counting Sort** é eficiente para intervalos limitados de valores inteiros, com complexidade O(n + k).
+
+
+## Atividade 6
+
+|       |            |  Bubble | Selection  | Insertion  | Heap   | Merge  | Shell  |   Quick |
+|-------|------------|---------|------------|------------|------- |--------|--------|---------| 
+|Copias | Pior caso  |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|
+|Copias | Médio caso |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|
+|Copias | Melhor caso|O(1)     |O(n²)       |O(n)        |O(nlogn)|
+|Comps  | Pior caso  |O(n²)    |O(n)        |O(n²)       |O(nlogn)|
+|Comps  | Médio caso |O(n²)    |O(n)        |O(n²)       |O(nlogn)|
+|Comps  | Melhor caso|O(n)     |O(n)        |O(n)        |O(nlogn)|
+|Espaço | Pior caso  |O(1)     |O(1)        |O(1)        |O(nlogn)|
+|Espaço | Médio caso |O(1)     |O(1)        |O(1)        |O(nlogn)|
+|Espaço | Melhor caso|O(1)     |O(1)        |O(1)        |O(nlogn)|
+
 
