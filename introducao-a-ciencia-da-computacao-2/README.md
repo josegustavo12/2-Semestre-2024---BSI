@@ -601,16 +601,16 @@ No geral, a complexidade de tempo do Counting Sort é **O(n + k)**, onde:
 
 ## Atividade 6
 
-|       |            |  Bubble | Selection  | Insertion  | Heap   | Merge  | Shell  |   Quick |
-|-------|------------|---------|------------|------------|------- |--------|--------|---------| 
-|Copias | Pior caso  |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|
-|Copias | Médio caso |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|
-|Copias | Melhor caso|O(1)     |O(n²)       |O(n)        |O(nlogn)|
-|Comps  | Pior caso  |O(n²)    |O(n)        |O(n²)       |O(nlogn)|
-|Comps  | Médio caso |O(n²)    |O(n)        |O(n²)       |O(nlogn)|
-|Comps  | Melhor caso|O(n)     |O(n)        |O(n)        |O(nlogn)|
-|Espaço | Pior caso  |O(1)     |O(1)        |O(1)        |O(nlogn)|
-|Espaço | Médio caso |O(1)     |O(1)        |O(1)        |O(nlogn)|
-|Espaço | Melhor caso|O(1)     |O(1)        |O(1)        |O(nlogn)|
+|       |            |  Bubble | Selection  | Insertion  | Heap   | Merge  | Shell    |   Quick |
+|-------|------------|---------|------------|------------|------- |--------|----------|---------| 
+|Copias | Pior caso  |O(n²)    |O(n)        |O(n²)       |O(nlogn)|O(nlogn)|O(n²)     |O(n²)    |
+|Copias | Médio caso |O(n²)    |O(n)        |O(n²)       |O(nlogn)|O(nlogn)|O(n^(3/2))|O(nlogn) |
+|Copias | Melhor caso|O(1)     |O(1)        |O(n)        |O(nlogn)|O(nlogn)|O(nlogn)  |O(nlogn) |
+|Comps  | Pior caso  |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|O(nlogn)|O(n²)     |O(n²)    |
+|Comps  | Médio caso |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|O(nlogn)|O(n^(3/2))|O(nlogn) |
+|Comps  | Melhor caso|O(n)     |O(n²)       |O(n)        |O(nlogn)|O(nlogn)|O(nlogn)  |O(nlogn) |
+|Espaço | Pior caso  |O(1)     |O(1)        |O(1)        |O(1)    |O(n)    |O(1)      |O(n)     |
+|Espaço | Médio caso |O(1)     |O(1)        |O(1)        |O(1)    |O(n)    |O(1)      |O(logn)  |
+|Espaço | Melhor caso|O(1)     |O(1)        |O(1)        |O(1)    |O(n)    |O(1)      |O(logn)  |
 
 
