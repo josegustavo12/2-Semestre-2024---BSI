@@ -603,9 +603,9 @@ No geral, a complexidade de tempo do Counting Sort é **O(n + k)**, onde:
 
 |       |            |  Bubble | Selection  | Insertion  | Heap   | Merge  | Shell    |   Quick |
 |-------|------------|---------|------------|------------|------- |--------|----------|---------| 
-|Copias | Pior caso  |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|O(nlogn)|O(n²)     |O(n²)    |
-|Copias | Médio caso |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|O(nlogn)|O(n^(3/2))|O(nlogn) |
-|Copias | Melhor caso|O(1)     |O(n²)       |O(n)        |O(nlogn)|O(nlogn)|O(nlogn)  |O(nlogn) |
+|Copias | Pior caso  |O(n²)    |O(n)        |O(n²)       |O(nlogn)|O(nlogn)|O(n²)     |O(n²)    |
+|Copias | Médio caso |O(n²)    |O(n)        |O(n²)       |O(nlogn)|O(nlogn)|O(n^(3/2))|O(nlogn) |
+|Copias | Melhor caso|O(1)     |O(1)        |O(n)        |O(nlogn)|O(nlogn)|O(nlogn)  |O(nlogn) |
 |Comps  | Pior caso  |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|O(nlogn)|O(n²)     |O(n²)    |
 |Comps  | Médio caso |O(n²)    |O(n²)       |O(n²)       |O(nlogn)|O(nlogn)|O(n^(3/2))|O(nlogn) |
 |Comps  | Melhor caso|O(n)     |O(n²)       |O(n)        |O(nlogn)|O(nlogn)|O(nlogn)  |O(nlogn) |

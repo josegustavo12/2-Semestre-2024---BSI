@@ -16,9 +16,14 @@ typedef struct Tree{
 
 } Tree;
 
-Tree* creatTree();
-Node* creatNode(int data); // função para criar o nó (estrutura do elemento da árvore)
+Tree* createTree();
+Node* createNode(int data); // função para criar o nó (estrutura do elemento da árvore)
 Node* insert(Node* node, int data); // função para inserir o elemento dentro de uma árvore; Parametros: Node* node -> estrutura do nó que irá inserir, data -> valor do elemento
 
+int search (Node* node, int data);
+
+Node* deleteNode(Node* node, int data, char filhoSubstituto);
+
+Node* getMaxNode(Node* node);
 
 #endif // TREE_H
