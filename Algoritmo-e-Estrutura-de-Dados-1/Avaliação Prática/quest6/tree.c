@@ -65,6 +65,31 @@ int search( Node* node, int data ){
 
 }
 
+int countSubNodes(Node* node) {
+    if (node == NULL) {
+        return 0;
+    }
+    // conta o no atual e chama a função para contar os nos filhos
+    return 1 + countSubNodes(node->left) + countSubNodes(node->right);
+}
+
+
+int searchAndCountSubNodes(Node* node, int data) {
+    if (node == NULL) {
+        return 0;
+    }
+
+    if (data == node->data) {
+        return countSubNodes(node);
+    }
+
+    if (data < node->data) {
+        return searchAndCountSubNodes(node->left, data);
+    } else {
+        return searchAndCountSubNodes(node->right, data);
+    }
+}
+
 Node* getMaxNode( Node* node ){
 
     if (node == NULL){
