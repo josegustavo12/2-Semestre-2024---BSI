@@ -1,47 +1,59 @@
-#include <stdio.h>
-#include <stdlib.h>
+// main.c
 #include "ex1.h"
+#include <string.h>
 
-// Função de teste para verificar o balanceamento de uma sequência
-void teste(int tamanho, const char *sequencia) {
-    Fila fila;
-    criarFila(&fila, tamanho); // Chama a função criarFila
-
-    // Adiciona cada elemento da sequência na fila
-    for (int i = 0; i < tamanho; i++) {
-        enqueue(&fila, sequencia[i]);
-    }
-
-    // Verifica se a sequência está balanceada
-    int resultado = verificarBalanceamento(&fila);
-
-    // Imprime a fila
-    imprimir(&fila);
-
-    // Com base no resultado, imprime se está balanceada ou não
-    if (resultado) {
-        printf("Sequência está balanceada.\n");
-    } else {
-        printf("Sequência não está balanceada.\n");
-    }
-}
-
-// Casos de teste
+// Função principal com casos de teste
 int main() {
-    printf("Teste 1: \"()[{}\"\n");
-    teste(5, "()[{}");  // Teste 1
+    // Definindo os casos de teste
+    char* casos[] = {
+        "()",
+        "()[]{}",
+        "(]",
+        "([)]",
+        "{[]}",
+        "",
+        "(((())))",
+        "({[()()]})",
+        "({[()()]}",
+        "({[()()]})}",
+        "([{}])",
+        "([{})]",
+        "({}[])",
+        "([)]",
+        "(((((((((())))))))))",
+        "(){[]}"
+    };
 
-    printf("\nTeste 2: \"{[]}\"\n");
-    teste(4, "{[]}");   // Teste 2
+    int numeroCasos = sizeof(casos) / sizeof(casos[0]);
 
-    printf("\nTeste 3: \"([{()}])\"\n");
-    teste(8, "([{()}])"); // Teste 3
+    for (int i = 0; i < numeroCasos; i++) {
+        // Cria uma fila para cada caso
+        Fila fila;
+        int capacidade = strlen(casos[i]) > 0 ? strlen(casos[i]) : 1;
+        criarFila(&fila, capacidade > 0 ? capacidade : 1);
 
-    printf("\nTeste 4: \"{([])}\"\n");
-    teste(6, "{([])}");    // Teste 4
+        // Enfileira os caracteres do caso de teste na fila
+        for (int j = 0; casos[i][j] != '\0'; j++) {
+            enqueue(&fila, casos[i][j]);
+        }
 
-    printf("\nTeste 5: \"[)))()]\"\n");
-    teste(7, "[)))()]");    // Teste 5
+        // Imprime o caso de teste
+        printf("Caso %d: ", i + 1);
+        imprimir(&fila);
+
+        // Verifica o balanceamento
+        int resultado = verificarBalanceamento(&fila);
+
+        // Imprime o resultado
+        if (resultado) {
+            printf("Resultado: Balanceado\n\n");
+        } else {
+            printf("Resultado: Não Balanceado\n\n");
+        }
+
+        // Libera a memória alocada para a fila
+        free(fila.data);
+    }
 
     return 0;
 }
