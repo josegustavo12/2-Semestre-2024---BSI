@@ -1,63 +1,52 @@
-#ifndef EX3_H
-#define EX3_H
+// quest3.h
+#ifndef QUEST3_H
+#define QUEST3_H
 
-typedef struct Node {
-    int data;
-    struct Node* next;
-    struct Node* prev;
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_CAPACITY 10
+#define NULL_INDEX -1
+
+// Estrutura para representar um nó na LNSE
+typedef struct {
+    int value;
+    int next;
 } Node;
 
-typedef struct Lista {
-    Node* head;
-    Node* tail;
-    int size;
-} Lista;
-
-typedef struct Fila {
-    int capacity;
-    int* data;      // Alterado para int*
+// Estrutura para implementar uma fila estática
+typedef struct {
+    int data[MAX_CAPACITY];
     int front;
     int rear;
-    int size;
-} Fila;
+    int capacity;
+    int count; // Número de elementos na fila
+} StaticQueue;
 
-typedef struct LNSE {
-    Lista* lista;
-    Fila fila;
+// Estrutura para implementar a Lista Não Sequencial e Estática (LNSE)
+typedef struct {
+    Node vector[MAX_CAPACITY];   // Vetor de nós
+    StaticQueue freeQueue;       // Fila de índices livres
+    int head;                    // Índice do primeiro elemento
+    int tail;                    // Índice do último elemento
+    int size;                    // Número de elementos na lista
 } LNSE;
 
-// Funções da Lista
-Node* criarNode(int data);
-Lista* criarLista();
-int getSize(Lista* lista);
-int isEmpty(Lista* lista);
-void insertHead(Lista* lista, int data);
-void insertTail(Lista* lista, int data);
-void insert(Lista* lista, int data, int position);
-void removeHead(Lista* lista);
-void removeTail(Lista* lista);
-void removeNode(Lista* lista, int position);
-int busca(Lista* lista, int data);
-void clearlista(Lista* lista);
-void printLista(Lista* lista);
-
-// Funções da Fila
-void criarFila(Fila *fila, int capacity);
-int isEmptyf(Fila *fila);
-int isFull(Fila *fila);
-void enqueue(Fila *fila, int data);
-int dequeue(Fila *fila);
-int getFront(Fila *fila);
-void clearf(Fila *fila);
-void imprimirF(Fila *fila); // Renomeado para evitar conflito
+// Funções da Fila Estática
+void initializeQueue(StaticQueue *q, int capacity);
+int isEmpty(StaticQueue *q);
+int isFull(StaticQueue *q);
+int enqueue(StaticQueue *q, int item);
+int dequeue(StaticQueue *q, int *item);
+int copyQueue(StaticQueue *q, int *tempArray, int *tempSize);
 
 // Funções da LNSE
-LNSE* crialistaLNSE(int capacity);
-void inserir(LNSE* lista_lnse, int data, int position);
-void remover(LNSE* lista_lnse, int position);
-int buscar(LNSE* lista_lnse, int data);
-int sizeLNSE(LNSE* lista_lnse);
-void clearLNSE(LNSE* lista_lnse);
-void imprimirLNSE(LNSE* lista_lnse);
+void initializeLNSE(LNSE *list, int capacity);
+void inserir(LNSE *list, int x, int i);
+int remover(LNSE *list, int i, int *removed_value);
+int buscar(LNSE *list, int x);
+int size_list(LNSE *list);
+void clearList(LNSE *list, int capacity);
+void imprimir(LNSE *list, int capacity);
 
-#endif // EX3_H
+#endif // QUEST3_H

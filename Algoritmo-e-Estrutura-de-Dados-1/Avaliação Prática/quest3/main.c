@@ -1,122 +1,106 @@
-#include <stdio.h>
-#include <stdlib.h>
+// main.c
 #include "ex3.h"
 
-int main(){
-    // 1. Cria uma LNSE com capacidade para 10 elementos
-    int capacidade = 10;
-    LNSE* minhaLNSE = crialistaLNSE(capacidade);
-    printf("LNSE criada com capacidade para %d elementos.\n", capacidade);
+int main() {
+    LNSE lista;
+    initializeLNSE(&lista, MAX_CAPACITY);
     
-    // 2. Insere elementos na LNSE
-    printf("\nInserindo elementos na LNSE:\n");
-    inserir(minhaLNSE, 5, 0);  // Insere 5 na posição 0 (início)
-    printf("Inserido 5 na posição 0.\n");
-    imprimirLNSE(minhaLNSE);
+    // Inserindo elementos
+    printf("Inserindo 10 na posição 0.\n");
+    inserir(&lista, 10, 0); // Lista: 10
+    imprimir(&lista, MAX_CAPACITY);
     
-    inserir(minhaLNSE, 10, 1); // Insere 10 na posição 1 (final)
-    printf("Inserido 10 na posição 1.\n");
-    imprimirLNSE(minhaLNSE);
+    printf("Inserindo 20 na posição 1.\n");
+    inserir(&lista, 20, 1); // Lista: 10 -> 20
+    imprimir(&lista, MAX_CAPACITY);
     
-    inserir(minhaLNSE, 15, 1); // Insere 15 na posição 1 (meio)
-    printf("Inserido 15 na posição 1.\n");
-    imprimirLNSE(minhaLNSE);
+    printf("Inserindo 30 na posição 2.\n");
+    inserir(&lista, 30, 2); // Lista: 10 -> 20 -> 30
+    imprimir(&lista, MAX_CAPACITY);
     
-    inserir(minhaLNSE, 20, 2); // Insere 20 na posição 2 (meio)
-    printf("Inserido 20 na posição 2.\n");
-    imprimirLNSE(minhaLNSE);
+    printf("Inserindo 15 na posição 1.\n");
+    inserir(&lista, 15, 1); // Lista: 10 -> 15 -> 20 -> 30
+    imprimir(&lista, MAX_CAPACITY);
     
-    inserir(minhaLNSE, 25, 4); // Insere 25 na posição 4 (final)
-    printf("Inserido 25 na posição 4.\n");
-    imprimirLNSE(minhaLNSE);
+    // Removendo um elemento
+    int valor_removido;
+    printf("Removendo o elemento na posição 2.\n");
+    if(remover(&lista, 2, &valor_removido)) { // Remove o elemento na posição 2 (20)
+        printf("Valor removido: %d\n", valor_removido);
+    }
+    imprimir(&lista, MAX_CAPACITY);
     
-    // 3. Busca elementos na LNSE
-    printf("\nBuscando elementos na LNSE:\n");
-    int elementosParaBuscar[] = {10, 15, 30};
-    int numElementos = sizeof(elementosParaBuscar)/sizeof(elementosParaBuscar[0]);
-    for(int i = 0; i < numElementos; i++){
-        int pos = buscar(minhaLNSE, elementosParaBuscar[i]);
-        if(pos != -1){
-            printf("Elemento %d encontrado na posição %d.\n", elementosParaBuscar[i], pos);
-        }
-        else{
-            printf("Elemento %d não encontrado na LNSE.\n", elementosParaBuscar[i]);
-        }
+    // Buscando um elemento
+    int posicao = buscar(&lista, 30);
+    if(posicao != -1) {
+        printf("Elemento 30 encontrado na posição: %d\n", posicao);
+    } else {
+        printf("Elemento 30 não encontrado na lista.\n");
     }
     
-    // 4. Verifica o tamanho da LNSE
-    printf("\nTamanho atual da LNSE: %d\n", sizeLNSE(minhaLNSE));
+    // Tamanho da lista
+    int tamanho = size_list(&lista);
+    printf("Tamanho da lista: %d\n", tamanho);
     
-    // 5. Remove elementos da LNSE
-    printf("\nRemovendo elementos da LNSE:\n");
-    remover(minhaLNSE, 1); // Remove o elemento na posição 1 (15)
-    printf("Removido elemento da posição 1.\n");
-    imprimirLNSE(minhaLNSE);
+    // Inserindo mais elementos até a capacidade
+    printf("Inserindo 40 na posição 3.\n");
+    inserir(&lista, 40, 3); // Lista: 10 -> 15 -> 30 -> 40
+    imprimir(&lista, MAX_CAPACITY);
     
-    remover(minhaLNSE, 0); // Remove o elemento na posição 0 (5)
-    printf("Removido elemento da posição 0.\n");
-    imprimirLNSE(minhaLNSE);
+    printf("Inserindo 50 na posição 4.\n");
+    inserir(&lista, 50, 4); // Lista: 10 -> 15 -> 30 -> 40 -> 50
+    imprimir(&lista, MAX_CAPACITY);
     
-    remover(minhaLNSE, sizeLNSE(minhaLNSE) - 1); // Remove o último elemento (25)
-    printf("Removido elemento da última posição.\n");
-    imprimirLNSE(minhaLNSE);
+    // Tentativa de inserir além da capacidade
+    printf("Tentando inserir 60 na posição 5.\n");
+    inserir(&lista, 60, 5); // Deverá funcionar, pois MAX_CAPACITY=10
+    imprimir(&lista, MAX_CAPACITY);
     
-    // 6. Verifica novamente o tamanho da LNSE
-    printf("\nTamanho atual da LNSE após remoções: %d\n", sizeLNSE(minhaLNSE));
+    // Tentando inserir mais para exceder a capacidade
+    printf("Tentando inserir 70 na posição 6.\n");
+    inserir(&lista, 70, 6); // Continua inserindo até a capacidade
+    imprimir(&lista, MAX_CAPACITY);
     
-    // 7. Tenta remover um elemento de uma posição inválida
-    printf("\nTentando remover elemento de posição inválida (10):\n");
-    remover(minhaLNSE, 10); // Posição inválida
-    imprimirLNSE(minhaLNSE);
+    printf("Tentando inserir 80 na posição 7.\n");
+    inserir(&lista, 80, 7);
+    imprimir(&lista, MAX_CAPACITY);
     
-    // 8. Insere mais elementos para testar a fila
-    printf("\nInserindo mais elementos na LNSE para testar a fila:\n");
-    inserir(minhaLNSE, 30, 1); // Insere 30 na posição 1
-    printf("Inserido 30 na posição 1.\n");
-    imprimirLNSE(minhaLNSE);
+    printf("Tentando inserir 90 na posição 8.\n");
+    inserir(&lista, 90, 8);
+    imprimir(&lista, MAX_CAPACITY);
     
-    inserir(minhaLNSE, 35, 2); // Insere 35 na posição 2
-    printf("Inserido 35 na posição 2.\n");
-    imprimirLNSE(minhaLNSE);
+    printf("Tentando inserir 100 na posição 9.\n");
+    inserir(&lista, 100, 9);
+    imprimir(&lista, MAX_CAPACITY);
     
-    // 9. Busca novamente após inserções
-    printf("\nBuscando elementos na LNSE após inserções adicionais:\n");
-    int novosElementosParaBuscar[] = {5, 30, 35};
-    int numNovosElementos = sizeof(novosElementosParaBuscar)/sizeof(novosElementosParaBuscar[0]);
-    for(int i = 0; i < numNovosElementos; i++){
-        int pos = buscar(minhaLNSE, novosElementosParaBuscar[i]);
-        if(pos != -1){
-            printf("Elemento %d encontrado na posição %d.\n", novosElementosParaBuscar[i], pos);
-        }
-        else{
-            printf("Elemento %d não encontrado na LNSE.\n", novosElementosParaBuscar[i]);
-        }
+    // Agora, a fila está cheia. Tentativa de inserir mais.
+    printf("Tentando inserir 110 na posição 10.\n");
+    inserir(&lista, 110, 10); // Deve falhar
+    imprimir(&lista, MAX_CAPACITY);
+    
+    // Removendo alguns elementos
+    printf("Removendo o elemento na posição 0.\n");
+    if(remover(&lista, 0, &valor_removido)) { // Remove o elemento 10
+        printf("Valor removido: %d\n", valor_removido);
     }
+    imprimir(&lista, MAX_CAPACITY);
     
-    // 10. Verifica o tamanho final da LNSE
-    printf("\nTamanho final da LNSE: %d\n", sizeLNSE(minhaLNSE));
-    
-    // 11. Limpa a LNSE
-    printf("\nLimpando a LNSE:\n");
-    clearLNSE(minhaLNSE);
-    printf("LNSE limpa.\n");
-    imprimirLNSE(minhaLNSE);
-    
-    // 12. Tenta buscar em uma LNSE limpa
-    printf("\nTentando buscar elemento em LNSE limpa:\n");
-    int posFinal = buscar(minhaLNSE, 10);
-    if(posFinal != -1){
-        printf("Elemento 10 encontrado na posição %d.\n", posFinal);
+    printf("Removendo o elemento na posição 3.\n");
+    if(remover(&lista, 3, &valor_removido)) { // Remove o elemento 40
+        printf("Valor removido: %d\n", valor_removido);
     }
-    else{
-        printf("Elemento 10 não encontrado na LNSE.\n");
-    }
+    imprimir(&lista, MAX_CAPACITY);
     
-    // 13. Libera a memória alocada para a LNSE
-    clearLNSE(minhaLNSE); // Já limpa a lista e a fila
-    free(minhaLNSE->lista); // Libera a lista
-    free(minhaLNSE); // Libera a LNSE
-    printf("\nMemória alocada para a LNSE foi liberada.\n");
+    // Inserindo após remoções
+    printf("Inserindo 120 na posição 1.\n");
+    inserir(&lista, 120, 1); // Lista: 15 -> 120 -> 30 -> 50 -> 60 -> 70 -> 80 -> 90 -> 100
+    imprimir(&lista, MAX_CAPACITY);
+    
+    // Limpando a lista
+    printf("Limpando a lista.\n");
+    clearList(&lista, MAX_CAPACITY);
+    printf("Lista após limpeza:\n");
+    imprimir(&lista, MAX_CAPACITY);
     
     return 0;
 }

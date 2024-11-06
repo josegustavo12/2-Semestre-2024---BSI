@@ -1,440 +1,244 @@
-#include <stdio.h>
-#include <stdlib.h>
+// quest3.c
 #include "ex3.h"
 
-// Função para criar um novo nó
-Node* criarNode(int data) {
-    Node* novoNode = (Node*)malloc(sizeof(Node));
-    if (novoNode == NULL) {
-        printf("Erro ao alocar memória!\n");
-        exit(1);
-    }
-    novoNode->data = data;
-    novoNode->next = NULL;
-    novoNode->prev = NULL;
-    return novoNode;
+// Funções da Fila Estática
+
+// Inicializa a fila com todos os índices disponíveis
+void initializeQueue(StaticQueue *q, int capacity) {
+    q->front = 0;
+    q->rear = 0;
+    q->capacity = capacity;
+    q->count = 0;
+    // Não enfileira nada aqui; a função que usa initializeQueue deve enfileirar as posições
 }
 
-// Função para inicializar uma lista duplamente ligada
-Lista* criarLista() {
-    Lista* lista = (Lista*)malloc(sizeof(Lista));
-    if (lista == NULL) {
-        printf("Erro ao alocar memória!\n");
-        exit(1);
-    }
-    lista->head = NULL;
-    lista->tail = NULL;
-    lista->size = 0;
-    return lista;
+// Verifica se a fila está vazia
+int isEmpty(StaticQueue *q) {
+    return q->count == 0;
 }
 
-int getSize(Lista* lista){
-    return lista->size;
+// Verifica se a fila está cheia
+int isFull(StaticQueue *q) {
+    return q->count == q->capacity;
 }
 
-int isEmpty(Lista* lista){
-    return getSize(lista) == 0;
+// Adiciona um item na fila
+int enqueue(StaticQueue *q, int item) {
+    if(isFull(q)) {
+        printf("Fila está cheia. Não é possível enfileirar o item %d.\n", item);
+        return 0; // Falha
+    }
+    q->data[q->rear] = item;
+    q->rear = (q->rear + 1) % q->capacity;
+    q->count++;
+    return 1; // Sucesso
 }
 
-// Função para inserir no início da lista
-void insertHead(Lista* lista, int data){
-    Node* newNode = criarNode(data);
-
-    if (isEmpty(lista)){
-        lista->head = newNode;
-        lista->tail = newNode;
+// Remove e retorna o primeiro item da fila
+int dequeue(StaticQueue *q, int *item) {
+    if(isEmpty(q)) {
+        printf("Fila está vazia. Não é possível desenfileirar.\n");
+        return 0; // Falha
     }
-    else{
-        newNode->next = lista->head;
-        lista->head->prev = newNode;
-        lista->head = newNode;
-    }
-
-    lista->size++;
+    *item = q->data[q->front];
+    q->front = (q->front + 1) % q->capacity;
+    q->count--;
+    return 1; // Sucesso
 }
 
-// Função para inserir no final da lista
-void insertTail(Lista* lista, int data){
-    if(isEmpty(lista)){
-        insertHead(lista, data);
+// Função para copiar os elementos da fila para um array temporário
+int copyQueue(StaticQueue *q, int *tempArray, int *tempSize) {
+    if(isEmpty(q)) {
+        *tempSize = 0;
+        return 0; // Fila vazia
     }
-    else{
-        Node* newNode = criarNode(data);
-
-        newNode->prev = lista->tail;
-        lista->tail->next = newNode;
-
-        lista->tail = newNode;
-
-        lista->size++;
+    int count = 0;
+    int i = q->front;
+    while(count < q->count) {
+        tempArray[count++] = q->data[i];
+        i = (i + 1) % q->capacity;
+        if(count >= q->capacity) break; // Prevenir loop infinito
     }
+    *tempSize = count;
+    return 1; // Sucesso
 }
 
-// Função para inserir em uma posição específica
-void insert(Lista* lista, int data, int position){
-    if(position <= getSize(lista)){
+// Funções da LNSE
 
-        if(position == 0){
-            insertHead(lista, data);
+// Inicializa a LNSE
+void initializeLNSE(LNSE *list, int capacity) {
+    initializeQueue(&list->freeQueue, capacity);
+    for(int i = 0; i < capacity; i++) {
+        list->vector[i].next = NULL_INDEX;
+        list->vector[i].value = 0; // Valor padrão
+        // Enfileirar todos os índices na fila de free indices
+        enqueue(&list->freeQueue, i);
+    }
+    list->head = NULL_INDEX;
+    list->tail = NULL_INDEX;
+    list->size = 0;
+}
+
+// Insere o valor x na posição i da lista real
+void inserir(LNSE *list, int x, int i) {
+    if(isEmpty(&list->freeQueue)) { // Fila está vazia
+        printf("Não há espaço para inserir o elemento %d.\n", x);
+        return;
+    }
+    if(i < 0 || i > list->size) {
+        printf("Posição inválida para inserção: %d.\n", i);
+        return;
+    }
+    
+    int idx;
+    if(!dequeue(&list->freeQueue, &idx)) {
+        printf("Erro ao desenfileirar índice para inserção.\n");
+        return;
+    }
+    
+    list->vector[idx].value = x;
+    list->vector[idx].next = NULL_INDEX;
+    
+    if(i == 0) {
+        // Inserção no início da lista
+        list->vector[idx].next = list->head;
+        list->head = idx;
+        if(list->size == 0) {
+            list->tail = idx;
         }
-        else if(position == getSize(lista)){
-            insertTail(lista, data);
+    } else {
+        // Inserção em posição intermediária ou final
+        int prev = list->head;
+        for(int j = 0; j < i - 1; j++) {
+            prev = list->vector[prev].next;
         }
-        else{
+        list->vector[idx].next = list->vector[prev].next;
+        list->vector[prev].next = idx;
+        if(prev == list->tail) {
+            list->tail = idx;
+        }
+    }
+    list->size++;
+}
 
-            Node* newNode = criarNode(data);
+// Remove o elemento na posição i da lista real e retorna seu valor
+int remover(LNSE *list, int i, int *removed_value) {
+    if(i < 0 || i >= list->size) {
+        printf("Posição inválida para remoção: %d.\n", i);
+        return 0; // Falha
+    }
+    if(list->size == 0) {
+        printf("Lista vazia. Não há elementos para remover.\n");
+        return 0; // Falha
+    }
+    
+    int removed_idx;
+    if(i == 0) {
+        // Remoção do primeiro elemento
+        removed_idx = list->head;
+        list->head = list->vector[removed_idx].next;
+        if(list->size == 1) {
+            list->tail = NULL_INDEX;
+        }
+    } else {
+        // Remoção de elemento intermediário ou final
+        int prev = list->head;
+        for(int j = 0; j < i - 1; j++) {
+            prev = list->vector[prev].next;
+        }
+        removed_idx = list->vector[prev].next;
+        list->vector[prev].next = list->vector[removed_idx].next;
+        if(removed_idx == list->tail) {
+            list->tail = prev;
+        }
+    }
+    
+    *removed_value = list->vector[removed_idx].value;
+    enqueue(&list->freeQueue, removed_idx);
+    list->size--;
+    return 1; // Sucesso
+}
 
-            Node* auxNode = lista->head;
-            for(int i = 0; i < position - 1; i++){
-                auxNode = auxNode->next;
+// Busca o elemento x na lista e retorna sua posição real
+int buscar(LNSE *list, int x) {
+    int current = list->head;
+    int pos = 0;
+    while(current != NULL_INDEX) {
+        if(list->vector[current].value == x) {
+            return pos;
+        }
+        current = list->vector[current].next;
+        pos++;
+    }
+    return -1; // Elemento não encontrado
+}
+
+// Retorna o número de elementos na lista real
+int size_list(LNSE *list) {
+    return list->size;
+}
+
+// Remove todos os elementos da lista
+void clearList(LNSE *list, int capacity) {
+    int current = list->head;
+    while(current != NULL_INDEX) {
+        int next_idx = list->vector[current].next;
+        enqueue(&list->freeQueue, current);
+        list->vector[current].value = 0;
+        list->vector[current].next = NULL_INDEX;
+        current = next_idx;
+    }
+    list->head = NULL_INDEX;
+    list->tail = NULL_INDEX;
+    list->size = 0;
+}
+
+// Imprime a lista real, índices de head e tail, e o conteúdo do vetor
+void imprimir(LNSE *list, int capacity) {
+    printf("\n--- Estado Atual da LNSE ---\n");
+    
+    // Imprimir a lista real
+    printf("Lista real: ");
+    int current = list->head;
+    while(current != NULL_INDEX) {
+        printf("%d -> ", list->vector[current].value);
+        current = list->vector[current].next;
+    }
+    printf("NULL\n");
+    
+    // Imprimir índices de head e tail
+    printf("Head index: %d\n", list->head);
+    printf("Tail index: %d\n", list->tail);
+    
+    // Copiar os índices livres da fila para um array temporário
+    int freeIndices[MAX_CAPACITY];
+    int freeSize = 0;
+    copyQueue(&list->freeQueue, freeIndices, &freeSize);
+    
+    // Criar um array para marcar quais índices estão livres
+    int isFree[MAX_CAPACITY];
+    for(int i = 0; i < capacity; i++) {
+        isFree[i] = 0; // Inicialmente, todos estão ocupados
+    }
+    for(int i = 0; i < freeSize; i++) {
+        if(freeIndices[i] >= 0 && freeIndices[i] < capacity) {
+            isFree[freeIndices[i]] = 1; // Marcar como livre
+        }
+    }
+    
+    // Imprimir o vetor com os índices dos próximos elementos
+    printf("Vetor:\n");
+    for(int i = 0; i < capacity; i++) {
+        if(isFree[i]) {
+            printf("[%d]: (-)\n", i);
+        } else {
+            printf("[%d]: %d -> ", i, list->vector[i].value);
+            if(list->vector[i].next != NULL_INDEX) {
+                printf("%d\n", list->vector[i].next);
+            } else {
+                printf("NULL\n");
             }
-
-            newNode->prev = auxNode;
-            newNode->next = auxNode->next;
-
-            auxNode->next->prev = newNode;
-            auxNode->next = newNode;
-
-            lista->size++;
         }
     }
-    else{
-        printf("Posição inválida para inserção!\n");
-    }
-}
-
-// Função para remover o primeiro elemento da lista
-void removeHead(Lista* lista){
-
-    if (isEmpty(lista)){
-        printf("Erro. Underflow!\n");
-        return;
-    }
-
-    Node* nodeRemover = lista->head;
-
-    if (getSize(lista) == 1){
-        lista->tail = NULL;
-        lista->head = NULL;
-    }
-    else{
-        lista->head = nodeRemover->next;
-        lista->head->prev = NULL;
-    }
-
-    lista->size--;
-
-    free(nodeRemover);
-}
-
-// Função para remover o último elemento da lista
-void removeTail(Lista* lista){
-
-    if (isEmpty(lista)){
-        printf("Erro. Underflow!\n");
-        return;
-    }
-
-    Node* nodeRemover = lista->tail;
-
-    if (getSize(lista) == 1){
-        lista->tail = NULL;
-        lista->head = NULL;
-    }
-    else{
-         lista->tail = nodeRemover->prev;
-         lista->tail->next = NULL;
-    }
-
-    lista->size--;
-
-    free(nodeRemover);
-}
-
-// Função para remover um nó em uma posição específica
-void removeNode(Lista* lista, int position){
-
-    if (isEmpty(lista)){
-        printf("Erro. Underflow!\n");
-        return;
-    }
-
-    if ((position < 0) || (position >= getSize(lista))){
-        printf("Posição inválida!\n");
-        return;
-    }
-
-    // se é o primeiro nó
-    if (position == 0){
-        removeHead(lista);
-        return;
-    }
-
-    // se é o último nó
-    if (position == getSize(lista) - 1){
-        removeTail(lista);
-        return;
-    }
-
-    Node* tempNode = lista->head;
-    int i = 0;
-    while(tempNode != NULL){
-
-        if (i == position){
-            tempNode->prev->next = tempNode->next;
-            tempNode->next->prev = tempNode->prev;
-            break;
-        }
-
-        tempNode = tempNode->next;
-        i++;
-    }
-
-    lista->size--;
-    free(tempNode);
-}
-
-// Função para buscar um elemento na lista
-int busca(Lista* lista, int data){
-
-    Node* tempNode = lista->head;
-    for(int i = 0; i < getSize(lista); i++){
-
-        if(tempNode->data == data){
-            return i;
-        }
-
-        tempNode = tempNode->next;
-    }
-
-    return -1;
-}
-
-// Função para limpar a lista
-void clearlista(Lista* lista){
-    while(getSize(lista) > 0){
-        removeHead(lista);
-    }
-}
-
-// Função para imprimir a lista
-void printLista(Lista* lista){
-    Node* nohAtual = lista->head;
-
-    if(getSize(lista) == 0){
-        printf("\n[]\n");
-        return;
-    }
-
-    printf("\n[");
-    while(nohAtual != NULL){
-        printf(" %d ", nohAtual->data);
-        nohAtual = nohAtual->next;
-    }
-    printf("]\n");
-}
-
-// Função para inicializar a fila
-void criarFila(Fila *fila, int capacity) {
-    fila->capacity = capacity;
-    fila->data = (int *)malloc(capacity * sizeof(int)); // Alterado para int*
-    if (fila->data == NULL) {
-        printf("Erro ao alocar memória para a fila.\n");
-        fila->capacity = 0;
-        fila->front = -1;
-        fila->rear = -1;
-        fila->size = 0;
-        return;
-    }
-    fila->front = -1;
-    fila->rear = -1;
-    fila->size = 0;
-}
-
-// Função para verificar se a fila está vazia
-int isEmptyf(Fila *fila) {
-    return fila->size == 0;
-}
-
-// Função para verificar se a fila está cheia
-int isFull(Fila *fila) {
-    return fila->size == fila->capacity;
-}
-
-// Função para adicionar um elemento na fila
-void enqueue(Fila *fila, int data) {
-    if (isFull(fila)) {
-        printf("Erro. Overflow!\n");
-        return;
-    }
-
-    if (fila->front == -1) { // Se a fila está vazia
-        fila->front = 0;
-        fila->rear = 0;
-    } else if (fila->rear == fila->capacity - 1) { // Fila circular
-        fila->rear = 0;
-    } else { // Incrementa o rear
-        fila->rear += 1;
-    }
-
-    fila->data[fila->rear] = data; // Armazena o inteiro
-    fila->size += 1;
-}
-
-// Função para remover um elemento da fila
-int dequeue(Fila *fila) {
-    if (isEmptyf(fila)) {
-        printf("Erro. Underflow!\n");
-        return -1;
-    }
-
-    int temp = fila->data[fila->front];
-
-    if (fila->size == 1) { // Se havia apenas um elemento
-        fila->front = -1;
-        fila->rear = -1;
-    } else if (fila->front == fila->capacity - 1) { // Fila circular
-        fila->front = 0;
-    } else { // Incrementa o front
-        fila->front += 1;
-    }
-
-    fila->size -= 1;
-    return temp;
-}
-
-// Função para obter o primeiro elemento da fila
-int getFront(Fila *fila) {
-    if (isEmptyf(fila)) {
-        printf("Fila vazia!\n");
-        return -1;
-    }
-    return fila->data[fila->front];
-}
-
-// Função para limpar a fila
-void clearf(Fila *fila) {
-    fila->front = -1;
-    fila->rear = -1;
-    fila->size = 0;
-}
-
-// Função para imprimir a fila
-void imprimirF(Fila *fila) {
-    if (isEmptyf(fila)) {
-        printf("\n[ ]\n");
-        return;
-    }
-
-    Fila auxFila;
-    criarFila(&auxFila, fila->capacity);
-    if (auxFila.data == NULL) {
-        return;
-    }
-
-    printf("\n[");
-    while(!isEmptyf(fila)){
-        int front = dequeue(fila);
-        printf(" %d ", front);
-        enqueue(&auxFila, front);
-    }
-    printf("]\n");
-
-    while(!isEmptyf(&auxFila)){
-        int auxValor = dequeue(&auxFila);
-        enqueue(fila, auxValor);
-    }
-
-    free(auxFila.data);
-}
-
-// Função para criar uma nova LNSE
-LNSE* crialistaLNSE(int capacity){
-    LNSE* lista_lnse = (LNSE*)malloc(sizeof(LNSE));
-    if (lista_lnse == NULL) {
-        printf("Erro ao alocar memória!\n");
-        exit(1);
-    }
-    lista_lnse->lista = criarLista();
-    criarFila(&lista_lnse->fila, capacity);
-
-    // Adiciona os índices na fila
-    for (int i = 0 ; i < capacity; i++){
-        enqueue(&lista_lnse->fila, i);
-    }
-
-    return lista_lnse;
-}
-
-// Função para inserir na LNSE
-void inserir(LNSE* lista_lnse, int data, int position){
-    if(position <= getSize(lista_lnse->lista)){
-        int available_position = dequeue(&lista_lnse->fila);
-        if(available_position == -1){
-            printf("Nenhuma posição disponível na fila.\n");
-            return;
-        }
-
-        if(position == 0){
-            insertHead(lista_lnse->lista, data);
-        }
-        else if(position == getSize(lista_lnse->lista)){
-            insertTail(lista_lnse->lista, data);
-        }
-        else{
-            insert(lista_lnse->lista, data, position);
-        }
-    }
-    else{
-        printf("Posição inválida para inserção.\n");
-    }
-}
-
-// Função para remover na LNSE
-void remover(LNSE* lista_lnse, int position){
-    if (isEmpty(lista_lnse->lista)){
-        printf("Erro. Underflow!\n");
-        return;
-    }
-
-    if ((position < 0) || (position >= getSize(lista_lnse->lista))){
-        printf("Posição inválida!\n");
-        return;
-    }
-
-    enqueue(&lista_lnse->fila, position);
-
-    if (position == 0){
-        removeHead(lista_lnse->lista);
-        return;
-    }
-
-    if (position == getSize(lista_lnse->lista) - 1){
-        removeTail(lista_lnse->lista);
-        return;
-    }
-
-    removeNode(lista_lnse->lista, position);
-}
-
-// Função para buscar na LNSE
-int buscar(LNSE* lista_lnse, int data){
-    return busca(lista_lnse->lista, data);
-}
-
-// Função para obter o tamanho da LNSE
-int sizeLNSE(LNSE* lista_lnse){
-    return getSize(lista_lnse->lista);
-}
-
-// Função para limpar a LNSE
-void clearLNSE(LNSE* lista_lnse){
-    clearlista(lista_lnse->lista);
-    clearf(&lista_lnse->fila);
-}
-
-// Função para imprimir a LNSE
-void imprimirLNSE(LNSE* lista_lnse){
-    printLista(lista_lnse->lista);
-    imprimirF(&lista_lnse->fila);
+    printf("-----------------------------\n");
 }

@@ -65,28 +65,28 @@ int search( Node* node, int data ){
 
 }
 
-int countSubNodes(Node* node) {
+int contarsubndos(Node* node) {
     if (node == NULL) {
         return 0;
     }
     // conta o no atual e chama a função para contar os nos filhos
-    return 1 + countSubNodes(node->left) + countSubNodes(node->right);
+    return 1 + contarsubndos(node->left) + contarsubndos(node->right);
 }
 
 
-int searchAndCountSubNodes(Node* node, int data) {
+int procurarecontarsubnodes(Node* node, int data) {
     if (node == NULL) {
         return 0;
     }
 
     if (data == node->data) {
-        return countSubNodes(node);
+        return contarsubndos(node);
     }
 
     if (data < node->data) {
-        return searchAndCountSubNodes(node->left, data);
+        return procurarecontarsubnodes(node->left, data);
     } else {
-        return searchAndCountSubNodes(node->right, data);
+        return procurarecontarsubnodes(node->right, data);
     }
 }
 
