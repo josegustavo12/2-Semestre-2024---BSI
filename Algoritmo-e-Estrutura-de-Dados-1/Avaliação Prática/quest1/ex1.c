@@ -6,10 +6,6 @@
 // Função para criar uma nova pilha
 Pilha* criarPilha() {
     Pilha* pilha = (Pilha*)malloc(sizeof(Pilha));
-    if (!pilha) {
-        printf("Erro ao alocar memória para a pilha.\n");
-        exit(EXIT_FAILURE);
-    }
     pilha->top = NULL;
     pilha->tamanho = 0;
     return pilha;
@@ -18,10 +14,6 @@ Pilha* criarPilha() {
 // Função para criar um novo nó
 Node* criarNode(char data) {
     Node* node = (Node*)malloc(sizeof(Node));
-    if (!node) {
-        printf("Erro ao alocar memória para o nó.\n");
-        exit(EXIT_FAILURE);
-    }
     node->data = data;
     node->next = NULL;
     return node;
@@ -29,7 +21,13 @@ Node* criarNode(char data) {
 
 // Função para verificar se a pilha está vazia
 int isEmpty(Pilha* pilha) {
-    return pilha->tamanho == 0;
+
+    if (pilha->tamanho == 0){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 // Função para adicionar um elemento no topo da pilha
@@ -82,10 +80,6 @@ void imprimirPilha(Pilha* pilha) {
 void criarFila(Fila *fila, int capacity) {
     fila->capacity = capacity;
     fila->data = (char *)malloc(capacity * sizeof(char));
-    if (!fila->data) {
-        printf("Erro ao alocar memória para a fila.\n");
-        exit(EXIT_FAILURE);
-    }
     fila->front = -1;
     fila->rear = -1;
     fila->size = 0;
@@ -103,7 +97,7 @@ int isFull(Fila *fila) {
 
 // Função para adicionar um elemento na fila
 void enqueue(Fila *fila, char data) {
-    if (isFull(fila)) {
+    if (fila->size >= fila->capacity) {
         printf("Erro. Overflow!\n");
         return;
     }
@@ -123,7 +117,7 @@ void enqueue(Fila *fila, char data) {
 
 // Função para remover um elemento da fila
 char dequeue(Fila *fila) {
-    if (isEmptyf(fila)) {
+    if (fila->size == 0) {
         printf("Erro. Underflow!\n");
         return -1;
     }
@@ -136,7 +130,7 @@ char dequeue(Fila *fila) {
     } else if (fila->front == fila->capacity - 1) {
         fila->front = 0;
     } else {
-        fila->front += 1;
+        fila->front = fila->front +1;
     }
 
     fila->size -= 1;
@@ -173,8 +167,8 @@ void imprimir(Fila *fila) {
     printf("[");
     while (!isEmptyf(fila)) {
         char front = dequeue(fila);
-        printf(" %c", front);
         enqueue(&auxFila, front);
+        printf(" %c", front);
     }
 
     // Restaura a fila original
