@@ -9,12 +9,13 @@ int main()
 
     int temp = isEmpty(pilha);
 
-    printf("Está vazia? %d", temp);
+    printf("Estï¿½ vazia? %d", temp);
 
     push(pilha, 5);
-    temp = isEmpty(pilha);
-    printf("\nEstá Vazia? %d", temp);
-    printf("\nTamanho? %d",getSize(pilha));
+    push(pilha, 10);
+    push(pilha, 20);
+    push(pilha, 50);
+    imprimir(pilha);
     pop(pilha);
     imprimir(pilha);
     return 0;
