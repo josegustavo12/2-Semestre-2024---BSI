@@ -30,7 +30,6 @@ Node* insert( Node* node, int data ){
 
     if (node == NULL){
         Node* newNode = createNode(data);
-        printf("\n%d", newNode->data);
         return newNode;
     }
 
@@ -43,7 +42,6 @@ Node* insert( Node* node, int data ){
         node->right = insert(node->right, data);
     }
 
-    printf("\n%d", node->data);
     return node;
 }
 
