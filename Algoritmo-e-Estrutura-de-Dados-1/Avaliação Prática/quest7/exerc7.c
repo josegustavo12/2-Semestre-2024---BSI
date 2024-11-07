@@ -3,10 +3,10 @@
 #include "exerc7.h"
 #define maximo 100
 
-int contsoma = 0;
-int vetorsoma[maximo];
+int contsoma = 0; //inicializa o contador de somas presentes na lista final com as somas de cada caminho em 0, pois ainda não foi realizada nenhuma soma.
+int vetorsoma[maximo]; //declara o vetor soma (vetor que armazenará as somas de cada caminho da árvore) como tendo no máximo tamanho 100, ou seja, armazena no máximo 100 somas.
 
-
+//função que cria os nós da árvore
 Node* createNode(int data){
     Node* node = (Node*) malloc( sizeof(Node) );
 
@@ -17,6 +17,7 @@ Node* createNode(int data){
     return node;
 }
 
+//função que inicializa a árvore
 Tree* createTree(){
     Tree* tree = (Tree*) malloc( sizeof(Tree) );
 
@@ -24,11 +25,11 @@ Tree* createTree(){
     return tree;
 };
 
+//função para inserir novos valores na árvore
 Node* insert( Node* node, int data ){
 
     if (node == NULL){
         Node* newNode = createNode(data);
-        printf("\n%d", newNode->data);
         return newNode;
     }
 
@@ -41,10 +42,10 @@ Node* insert( Node* node, int data ){
         node->right = insert(node->right, data);
     }
 
-    printf("\n%d", node->data);
     return node;
 }
 
+//função para procurar um valor na árvore
 int search( Node* node, int data ){
 
     if (node == NULL){
@@ -69,6 +70,7 @@ int search( Node* node, int data ){
 
 }
 
+//função para achar o maior valor 
 Node* getMaxNode( Node* node ){
 
     if (node == NULL){
@@ -83,6 +85,7 @@ Node* getMaxNode( Node* node ){
 
 }
 
+//função para achar o menor valor
 Node* getMinNode( Node* node ){
 
     if (node == NULL){
@@ -97,6 +100,7 @@ Node* getMinNode( Node* node ){
 
 }
 
+//função para deletar um nó
 Node* deleteNode( Node* node, int data,
                     char filhoSubstituto){
 
@@ -113,7 +117,7 @@ Node* deleteNode( Node* node, int data,
                                       filhoSubstituto);
     }
     else{
-        // encontrou o noh que sera excluido
+        // encontrou o nó que será excluido
         if(node->left == NULL){
             Node* tempNode = node->right;
             free(node);
@@ -125,7 +129,7 @@ Node* deleteNode( Node* node, int data,
             return tempNode;
         }
         else{
-            // o noh possui dois filhos
+            // o nó possui dois filhos
             Node* tempNode;
             if( filhoSubstituto == 'D' ){
                 // o menor de todos do lado direito
@@ -149,6 +153,7 @@ Node* deleteNode( Node* node, int data,
     return node;
 }
 
+//função pré-ordem para percorrer a árvore 
 void strPreorder(Node *node){
     if( node != NULL ){
 
@@ -159,7 +164,7 @@ void strPreorder(Node *node){
 }
 
 
-// Fun��o para percorrer a �rvore em ordem
+//função em ordem para percorrer a árvore
 void strInorder(Node *node) {
     if (node != NULL) {
 
@@ -169,7 +174,7 @@ void strInorder(Node *node) {
     }
 }
 
-// Fun��o para percorrer a �rvore em p�s-ordem
+//função pós-ordem para percorrer a árvore
 void strPostorder(Node *node) {
     if (node != NULL) {
 
@@ -179,32 +184,32 @@ void strPostorder(Node *node) {
     }
 }
 
-
-void somaCaminhos(int caminho[], int n){
-    int soma = 0;
-    for(int i = 0; i < n; i++){
+//função que soma os elementos de cada caminho
+void somaCaminhos(int caminho[], int n){ //função recebe um caminho da árvore e o tamanho desse caminho
+    int soma = 0; //inicializa a soma valendo 0 
+    for(int i = 0; i < n; i++){ //for para percorrer cada elemento do vetor caminho, a fim de somar eles
         soma += caminho[i];
     }
 
-    if(contsoma < maximo){ //verifica se o número de somas é menor que o tamanho do vetor que armazena as somas
-        vetorsoma[contsoma++] = soma;
+    if(contsoma < maximo){ //verifica se o número de somas do contador é menor que o tamanho máximo do vetor que armazena as somas de cada caminho
+        vetorsoma[contsoma++] = soma; //armazena o valor de soma no vetor soma e já increme o contador do número de somas
     }
 }
 
-
-void encontrarCaminhos (Node* raiz, int caminho[], int n ){
-    //Node* raiz = (Node*) malloc( sizeof(Node) ); //n� que vai receber a raiz da arvore e a partir dela ir percorrendo at� achar as folhas
-    if(raiz == NULL){ //se a �rvore n�o tem raiz, a soma dos valores ser� 0.
+//função para econtrar os caminhos da árvore
+void encontrarCaminhos (Node* raiz, int caminho[], int n ){ //recebe como argumentos o nó que vai receber a raiz da arvore e a partir dela ir percorrendo o caminho de tamanho n até achar as folhas
+    if(raiz == NULL){ //se a árvore não tem raiz significa que não tem o que somar
         return;
     }
 
-    else{
-       caminho[n] = raiz->data; //n � inicializado como 0
+    else{ //caso a árvore possua raiz 
+       caminho[n] = raiz->data; //aqui será armazenado o valor da raiz na variável caminho com n valendo 0 no início
        n++;
-       if (raiz->left == NULL && raiz->right == NULL){ //significa que � um n� folha, isto �, n�o tem filho
-            somaCaminhos (caminho, n);
+       if (raiz->left == NULL && raiz->right == NULL){ //significa que é um nó folha, isto é, não tem filho
+            somaCaminhos (caminho, n); //chamo a função soma, pois já cheguei até o final do meu caminho
        }
 
+//caso o nó tenha filhos, chamo a função encontrarCaminhos de forma recursiva até entrar dentro do if acima e chamar a função somaCaminhos
        encontrarCaminhos(raiz->left, caminho, n);
        encontrarCaminhos(raiz->right, caminho, n);
     }
@@ -212,16 +217,16 @@ void encontrarCaminhos (Node* raiz, int caminho[], int n ){
 
 // Função principal que coordena o processo de encontrar e imprimir as somas dos caminhos
 void caminhos(Tree* tree){
-    contsoma = 0; // Reinicia o contador de somas
-    int caminho [100];
+    contsoma = 0; //reinicia o contador de somas
+    int caminho [100]; //cria uma variável temporária caminho de tamanho 100 para armazenas os elementos do caminho da árvore
 
-    encontrarCaminhos(tree->root, caminho, 0);
+    encontrarCaminhos(tree->root, caminho, 0); 
 
-    // Imprime as somas como uma lista
-    printf("Somas dos caminhos das folhas até a raiz: [");
-    for(int i = 0; i < contsoma; i++){
+    //imprime as somas como uma lista
+    printf("Somas dos caminhos das folhas ate a raiz: [");
+    for(int i = 0; i < contsoma; i++){ //for para percorrer e imprimir as somas de cada caminho presente no vetor soma
         printf("%d", vetorsoma[i]);
-        if(i < contsoma - 1){
+        if(i < contsoma - 1){ 
             printf(", ");
         }
     }
