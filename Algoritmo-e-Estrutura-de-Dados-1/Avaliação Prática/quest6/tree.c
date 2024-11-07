@@ -199,12 +199,3 @@ void strPostorder(Node *node) {
         printf("%d ", node->data);
     }
 }
-
-// função para achar todos os subnós
-int search_subnos (Node* node, int data){
-
-
-}
-
-
-

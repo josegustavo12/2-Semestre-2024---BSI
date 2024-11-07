@@ -34,7 +34,6 @@ void strPreorder(Node *node);
 void strInorder(Node *node);
 void strPostorder(Node *node);
 
-int search_subnos (Node* node, int data);
 
 
 
