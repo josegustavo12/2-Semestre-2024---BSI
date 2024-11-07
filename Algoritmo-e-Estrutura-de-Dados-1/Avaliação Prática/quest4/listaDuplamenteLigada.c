@@ -3,20 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Definições de estruturas (assumindo que estão no cabeçalho)
-typedef struct Node {
-    int valor;
-    struct Node* next;
-    struct Node* prev;
-} Node;
-
-typedef struct Lista {
-    Node* head;
-    Node* tail;
-    int size;
-    int ordenado; // 0: não ordenado, 1: ordenado
-} Lista;
-
 // Função para criar um novo nó
 Node* criarNode(int valor) {
     Node* novoNode = (Node*)malloc(sizeof(Node));
@@ -40,7 +26,7 @@ Lista* criarLista() {
     lista->head = NULL;
     lista->tail = NULL;
     lista->size = 0;
-    lista->ordenado = 0;
+    lista->ordenado=0;
     return lista;
 }
 
@@ -49,85 +35,99 @@ int getSize(Lista* lista){
 }
 
 int isEmpty(Lista* lista){
-    return getSize(lista) == 0;
+    return getSize(lista)==0;
+
+    // return lista->head == NULL
 }
 
-// INSERE NA HEAD
+//INSERE NA HEAD
 void insertHead(Lista* lista, int valor){
-    Node* novoNode = criarNode(valor);
-    lista->ordenado = 0;
 
-    if (isEmpty(lista)){
+    Node* novoNode = criarNode(valor);
+
+    lista->ordenado= 0;
+
+    if (getSize(lista)==0){
         lista->head = novoNode;
         lista->tail = novoNode;
     }
     else{
-        novoNode->next = lista->head;
-        lista->head->prev = novoNode;
-        lista->head = novoNode;
+        novoNode->next = lista->head; // o next do novo node vai ser a antiga cabeça
+        lista->head->prev = novoNode; // o anterior a cabeça vai virar o novo node, o next do novo node vai ser a cabeça antiga
+        lista->head = novoNode; // o novo node vira a nova cabeça
     }
 
-    lista->size++;
+    lista->size++; // aumenta o tamanho da lista
 }
 
-// INSERE NO TAIL
-void insertTail(Lista* lista, int valor){
-    lista->ordenado = 0;
 
-    if(isEmpty(lista)){
+//INSERE NO TAIL
+void insertTail(Lista* lista, int valor){
+
+    lista->ordenado= 0;
+
+    if( isEmpty(lista) ){
         insertHead(lista, valor);
     }
     else{
         Node* novoNode = criarNode(valor);
-        novoNode->prev = lista->tail;
-        lista->tail->next = novoNode;
-        lista->tail = novoNode;
+
+        novoNode->prev = lista->tail; // o anterior ao novo node é o atigo nodeTail
+        lista->tail->next = novoNode; // o proximo do nodeTail vai ser o novo node
+        lista->tail = novoNode; // o node vai virar o tail
+
         lista->size++;
     }
 }
 
 void insert(Lista* lista, int valor, int position){
-    if(position < 0 || position > getSize(lista)){
-        printf("Posição inválida para inserção!\n");
-        return;
-    }
 
-    lista->ordenado = 0;
+    if(position <= getSize(lista)){
 
-    if(position == 0){
-        insertHead(lista, valor);
-    }
-    else if(position == getSize(lista)){
-        insertTail(lista, valor);
-    }
-    else{
-        Node* novoNode = criarNode(valor);
-        Node* auxNode = lista->head;
-        for(int i = 0; i < position - 1; i++){
-            auxNode = auxNode->next;
+        if(position==0){
+            insertHead(lista, valor);
+        }
+        else if( position==getSize(lista) ){
+            insertTail(lista,valor);
+        }
+        else{
+
+            Node* novoNode = criarNode(valor);
+
+            Node* auxNode = lista->head;
+            for(int i=0; i<position-1; i++){
+                auxNode = auxNode->next;
+            }
+
+            novoNode->prev = auxNode;
+            novoNode->next = auxNode->next;
+
+            auxNode->next->prev = novoNode;
+            auxNode->next = novoNode;
+
+            lista->ordenado= 0;
+
+            lista->size++;
+
         }
 
-        novoNode->next = auxNode->next;
-        novoNode->prev = auxNode;
-        auxNode->next->prev = novoNode;
-        auxNode->next = novoNode;
-
-        lista->size++;
     }
+
 }
 
-// Função para remover um elemento da lista
+// Função para remover um elemento da lista (head)
 void removeHead(Lista* lista){
-    if(isEmpty(lista)){
-        printf("Erro. Underflow!\n");
+
+    if ( isEmpty(lista) ){
+        printf("Erro. Underflow!");
         return;
     }
 
     Node* nodeRemover = lista->head;
 
-    if(getSize(lista) == 1){
-        lista->head = NULL;
+    if ( getSize(lista)==1 ){
         lista->tail = NULL;
+        lista->head = NULL;
     }
     else{
         lista->head = nodeRemover->next;
@@ -135,136 +135,169 @@ void removeHead(Lista* lista){
     }
 
     lista->size--;
+
     free(nodeRemover);
 }
 
+// Função para remover um elemento da lista (tail)
 void removeTail(Lista* lista){
-    if(isEmpty(lista)){
-        printf("Erro. Underflow!\n");
+
+    if ( isEmpty(lista) ){
+        printf("Erro. Underflow!");
         return;
     }
 
     Node* nodeRemover = lista->tail;
 
-    if(getSize(lista) == 1){
-        lista->head = NULL;
+    if ( getSize(lista)==1 ){
         lista->tail = NULL;
+        lista->head = NULL;
     }
     else{
-        lista->tail = nodeRemover->prev;
-        lista->tail->next = NULL;
+         lista->tail = nodeRemover->prev;
+         lista->tail->next = NULL;
     }
 
     lista->size--;
-    free(nodeRemover);
+
+    free(nodeRemover);// limpa o ponteiro da memória
 }
 
 void removeNode(Lista* lista, int position){
-    if(isEmpty(lista)){
-        printf("Erro. Underflow!\n");
+
+    if ( isEmpty(lista) ){
+        printf("Erro. Underflow!");
         return;
     }
 
-    if(position < 0 || position >= getSize(lista)){
-        printf("Posição inválida!\n");
+    if ( (position < 0 ) || (position >= getSize(lista)) ){
+        printf("Posição inválida!");
         return;
     }
 
-    if(position == 0){
+    // se é o primeiro nó
+    if (position == 0){
         removeHead(lista);
         return;
     }
 
-    if(position == getSize(lista) - 1){
+    // se é o último nó
+    if (position == getSize(lista) - 1){
         removeTail(lista);
         return;
     }
 
     Node* tempNode = lista->head;
-    for(int i = 0; i < position; i++){
-        tempNode = tempNode->next;
-    }
+    int i=0;
+    while( tempNode!=NULL ){
 
-    tempNode->prev->next = tempNode->next;
-    tempNode->next->prev = tempNode->prev;
+        if (i==position){
+
+            tempNode->prev->next = tempNode->next;
+
+            tempNode->next->prev = tempNode->prev;
+
+            break;
+        }
+
+        tempNode = tempNode->next;
+        i++;
+    }
 
     lista->size--;
     free(tempNode);
+
 }
 
-// Função para limpar a lista
+int buscar(Lista* lista, int valor){
+
+    if (lista->ordenado == 0){
+        Node* tempNode = lista->head;
+        for(int i=0; i<getSize(lista); i++){
+
+            if( tempNode->valor==valor ){
+                return i;
+            }
+
+            tempNode = tempNode->next;
+        }
+
+
+    }else{
+        int indice = buscaBinaria(lista,  valor);
+        return indice;
+    }
+
+    return -1;
+}
+
 void clear(Lista* lista){
-    while(!isEmpty(lista)){
+    Node* tempNode = lista->head;
+    while( getSize(lista)>0 ){
         removeHead(lista);
     }
 }
 
-// Função para imprimir a lista
 void printLista(Lista* lista){
     Node* nohAtual = lista->head;
 
-    if(isEmpty(lista)){
-        printf("\n[]\n");
+    if( getSize(lista)==0 ){
+        printf("\n[]");
         return;
     }
 
     printf("\n[");
-    while(nohAtual != NULL){
+    while( nohAtual->next!=NULL ){
         printf(" %d ", nohAtual->valor);
         nohAtual = nohAtual->next;
     }
-    printf("]\n");
+
+    // imprime o último noh
+    printf(" %d ", nohAtual->valor);
+
+    printf("]");
 }
 
-// Função para ordenar a lista em ordem decrescente usando Bubble Sort
+
+//função para ordenar em ordem decrescente 
 void ordenar(Lista* lista) {
-    if(isEmpty(lista) || lista->size == 1){
-        lista->ordenado = 1;
-        return;
-    }
-
-    int trocou;
-    Node* nohAtual;
-
-    do {
-        trocou = 0;
-        nohAtual = lista->head;
-
-        while(nohAtual->next != NULL){
-            if(nohAtual->valor < nohAtual->next->valor){
+    for (int j = getSize(lista); j > 0; j--) {
+        Node* nohAtual = lista->head;
+        int sentinela = 0;
+        for (int i = 0; i < j-1; i++) {
+            if (nohAtual->valor < nohAtual->next->valor) {
                 // Trocar os valores
                 int temp = nohAtual->valor;
                 nohAtual->valor = nohAtual->next->valor;
                 nohAtual->next->valor = temp;
-                trocou = 1;
+                sentinela = i;
             }
             nohAtual = nohAtual->next;
         }
-    } while(trocou);
-
+        j = sentinela + 1;
+    }
     lista->ordenado = 1;
 }
 
-// Função para encontrar o nó do meio entre inicio e fim
-Node* middle(Node* inicio, Node* fim) {
-    if (inicio == NULL){
-        return NULL;
+// função para achar o valor do meio
+Node* acharMeio(Node* inicio, Node* fim) {
+  if (inicio == NULL || inicio == fim){
+        return inicio;
     }
     Node* slow = inicio;
-    Node* fast = inicio->next;
-
-    while (fast != fim){
-        fast = fast->next;
-        if(fast != fim){
-            slow = slow->next;
-            fast = fast->next;
-        }
+    Node* fast = inicio;
+    while (fast->next != fim && fast->next->next != fim){
+        //slow vai se mover um nó por vez e o fast vai se mover dois nós por vez
+        slow = slow->next;
+        fast = fast->next->next;
     }
-
+    //o fast vai chegar ao final da lista antes de slow permitindo que slow fique no nó do meio
     return slow;
+
+
 }
 
-// Função auxiliar para buscar o índice de um nó
+//função para pegar o index específico de um elemento
 int getIndex(Lista* lista, Node* node){
     Node* temp = lista->head;
     int index = 0;
@@ -278,52 +311,33 @@ int getIndex(Lista* lista, Node* node){
     return -1;
 }
 
-// Função de busca binária recursiva que retorna o índice
+
+//função da busca binária recursiva
 int buscaBinariaRecursiva(Lista* lista, Node* inicio, Node* fim, int valor) {
     if (inicio == NULL || fim == NULL || inicio->prev == fim){
         return -1;
     }
 
-    Node* meio = middle(inicio, fim);
+    Node* meio = acharMeio(inicio, fim);
 
     if (meio->valor == valor) {
         return getIndex(lista, meio);
     }
-    // Como a lista está ordenada de forma decrescente
     else if (meio->valor < valor) {
-        // Valor está na parte esquerda
+
         return buscaBinariaRecursiva(lista, inicio, meio->prev, valor);
     }
     else {
-        // Valor está na parte direita
         return buscaBinariaRecursiva(lista, meio->next, fim, valor);
     }
 }
 
+//busca binária que recebe a lista e o valor que tá procurando, e chama a lista buscaBinariaRecursiva
+//eh chamada quando ordenado=1;
 int buscaBinaria(Lista* lista, int valor) {
     if (isEmpty(lista)) {
         return -1;
     }
 
     return buscaBinariaRecursiva(lista, lista->head, lista->tail, valor);
-}
-
-// Função para buscar um valor na lista
-int buscar(Lista* lista, int valor){
-    if (lista->ordenado == 0){
-        printf("Busca sem ser ordenada (Busca Linear)\n");
-        Node* tempNode = lista->head;
-        for(int i = 0; i < getSize(lista); i++){
-            if(tempNode->valor == valor){
-                return i;
-            }
-            tempNode = tempNode->next;
-        }
-    }
-    else{
-        printf("Busca ordenada (Busca Binária)\n");
-        return buscaBinaria(lista, valor);
-    }
-
-    return -1;
 }

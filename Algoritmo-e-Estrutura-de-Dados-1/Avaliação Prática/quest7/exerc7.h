@@ -35,7 +35,7 @@ void strInorder(Node *node);
 void strPostorder(Node *node);
 
 void somaCaminhos (int caminho[], int n);
-void encontrarCaminhos (Node* raiz, int caminho[], int n ); //passo a �rvore para come�ar do n� raiz. passo o vetor caminho[] para ir armazenando cada um dos elementos da �rvore e passo n como sendo o n�mero de elementos naquele caminho da �rvore
+void encontrarCaminhos (Node* raiz, int caminho[], int n ); 
 void caminhos(Tree* tree);
 
 
