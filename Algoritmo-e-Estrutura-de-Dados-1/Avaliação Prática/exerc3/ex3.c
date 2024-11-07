@@ -1,113 +1,114 @@
-// quest3.c
 #include "ex3.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-// FunÃ§Ãµes da Fila EstÃ¡tica
+// Funções da Fila Estática
 
-// Inicializa a fila com todos os Ã­ndices disponÃ­veis
-void initializeQueue(StaticQueue *q, int capacity) {
-    q->front = 0;
-    q->rear = 0;
-    q->capacity = capacity;
-    q->count = 0;
-    // NÃ£o enfileira nada aqui; a funÃ§Ã£o que usa initializeQueue deve enfileirar as posiÃ§Ãµes
+// Inicializa a fila com todos os índices disponíveis
+void criarFilaEstat(FilaEstat *fila, int capacity) {
+    fila->front = 0;
+    fila->rear = 0;
+    fila->capacity = capacity;
+    fila->count = 0;
+    // Não enfileira nada aqui; a função que usa initializeQueue deve enfileirar as posições
 }
 
-// Verifica se a fila estÃ¡ vazia
-int isEmpty(StaticQueue *q) {
-    return q->count == 0;
+// Verifica se a fila está vazia
+int isEmpty(FilaEstat *fila) {
+    return fila->count == 0;
 }
 
-// Verifica se a fila estÃ¡ cheia
-int isFull(StaticQueue *q) {
-    return q->count == q->capacity;
+// Verifica se a fila está cheia
+int isFull(FilaEstat *fila) {
+    return fila->count == fila->capacity;
 }
 
 // Adiciona um item na fila
-int enqueue(StaticQueue *q, int item) {
-    if(isFull(q)) {
-        printf("Fila estÃ¡ cheia. NÃ£o Ã© possÃ­vel enfileirar o item %d.\n", item);
+int enqueue(FilaEstat *fila, int item) {
+    if(isFull(fila)) {
+        printf("Fila está cheia. Não é possível enfileirar o item %d.\n", item);
         return 0; // Falha
     }
-    q->data[q->rear] = item;
-    q->rear = (q->rear + 1) % q->capacity;
-    q->count++;
+    fila->data[fila->rear] = item;
+    fila->rear = (fila->rear + 1) % fila->capacity;
+    fila->count++;
     return 1; // Sucesso
 }
 
 // Remove e retorna o primeiro item da fila
-int dequeue(StaticQueue *q, int *item) {
-    if(isEmpty(q)) {
-        printf("Fila estÃ¡ vazia. NÃ£o Ã© possÃ­vel desenfileirar.\n");
+int dequeue(FilaEstat *fila, int *item) {
+    if(isEmpty(fila)) {
+        printf("Fila está vazia. Não é possível desenfileirar.\n");
         return 0; // Falha
     }
-    *item = q->data[q->front];
-    q->front = (q->front + 1) % q->capacity;
-    q->count--;
+    *item = fila->data[fila->front];
+    fila->front = (fila->front + 1) % fila->capacity;
+    fila->count--;
     return 1; // Sucesso
 }
 
-// FunÃ§Ã£o para copiar os elementos da fila para um array temporÃ¡rio
-int copyQueue(StaticQueue *q, int *tempArray, int *tempSize) {
-    if(isEmpty(q)) {
+// Função para copiar os elementos da fila para um array temporário
+int copiarFila(FilaEstat *fila, int *tempArray, int *tempSize) {
+    if(isEmpty(fila)) {
         *tempSize = 0;
         return 0; // Fila vazia
     }
     int count = 0;
-    int i = q->front;
-    while(count < q->count) {
-        tempArray[count++] = q->data[i];
-        i = (i + 1) % q->capacity;
-        if(count >= q->capacity) break; // Prevenir loop infinito
+    int i = fila->front;
+    while(count < fila->count) {
+        tempArray[count++] = fila->data[i];
+        i = (i + 1) % fila->capacity;
+        if(count >= fila->capacity) break; // Prevenir loop infinito
     }
     *tempSize = count;
     return 1; // Sucesso
 }
 
-// FunÃ§Ãµes da LNSE
+// Funções da LNSE
 
 // Inicializa a LNSE
-void initializeLNSE(LNSE *list, int capacity) {
-    initializeQueue(&list->freeQueue, capacity);
+void criarLNSE(LNSE *list, int capacity) {
+     criarFilaEstat(&list->filalivre, capacity);
     for(int i = 0; i < capacity; i++) {
         list->vector[i].next = NULL_INDEX;
-        list->vector[i].value = 0; // Valor padrÃ£o
-        // Enfileirar todos os Ã­ndices na fila de free indices
-        enqueue(&list->freeQueue, i);
+        list->vector[i].data = 0; // Valor padrão
+        // Enfileirar todos os índices na fila de free indices
+        enqueue(&list->filalivre, i);
     }
     list->head = NULL_INDEX;
     list->tail = NULL_INDEX;
     list->size = 0;
 }
 
-// Insere o valor x na posiÃ§Ã£o i da lista real
+// Insere o valor x na posição i da lista real
 void inserir(LNSE *list, int x, int i) {
-    if(isEmpty(&list->freeQueue)) { // Fila estÃ¡ vazia
-        printf("NÃ£o hÃ¡ espaÃ§o para inserir o elemento %d.\n", x);
+    if(isEmpty(&list->filalivre)) { // Fila está vazia
+        printf("Não há espaço para inserir o elemento %d.\n", x);
         return;
     }
     if(i < 0 || i > list->size) {
-        printf("PosiÃ§Ã£o invÃ¡lida para inserÃ§Ã£o: %d.\n", i);
+        printf("Posição inválida para inserção: %d.\n", i);
         return;
     }
-    
+
     int idx;
-    if(!dequeue(&list->freeQueue, &idx)) {
-        printf("Erro ao desenfileirar Ã­ndice para inserÃ§Ã£o.\n");
+    if(!dequeue(&list->filalivre, &idx)) {
+        printf("Erro ao desenfileirar índice para inserção.\n");
         return;
     }
-    
-    list->vector[idx].value = x;
+
+    list->vector[idx].data = x;
     list->vector[idx].next = NULL_INDEX;
-    
+
     if(i == 0) {
-        // InserÃ§Ã£o no inÃ­cio da lista
+        // Inserção no início da lista
         list->vector[idx].next = list->head;
         list->head = idx;
         if(list->size == 0) {
             list->tail = idx;
         }
     } else {
-        // InserÃ§Ã£o em posiÃ§Ã£o intermediÃ¡ria ou final
+        // Inserção em posição intermediária ou final
         int prev = list->head;
         for(int j = 0; j < i - 1; j++) {
             prev = list->vector[prev].next;
@@ -121,27 +122,27 @@ void inserir(LNSE *list, int x, int i) {
     list->size++;
 }
 
-// Remove o elemento na posiÃ§Ã£o i da lista real e retorna seu valor
+// Remove o elemento na posição i da lista real e retorna seu valor
 int remover(LNSE *list, int i, int *removed_value) {
     if(i < 0 || i >= list->size) {
-        printf("PosiÃ§Ã£o invÃ¡lida para remoÃ§Ã£o: %d.\n", i);
+        printf("Posição inválida para remoção: %d.\n", i);
         return 0; // Falha
     }
     if(list->size == 0) {
-        printf("Lista vazia. NÃ£o hÃ¡ elementos para remover.\n");
+        printf("Lista vazia. Não há elementos para remover.\n");
         return 0; // Falha
     }
-    
+
     int removed_idx;
     if(i == 0) {
-        // RemoÃ§Ã£o do primeiro elemento
+        // Remoção do primeiro elemento
         removed_idx = list->head;
         list->head = list->vector[removed_idx].next;
         if(list->size == 1) {
             list->tail = NULL_INDEX;
         }
     } else {
-        // RemoÃ§Ã£o de elemento intermediÃ¡rio ou final
+        // Remoção de elemento intermediário ou final
         int prev = list->head;
         for(int j = 0; j < i - 1; j++) {
             prev = list->vector[prev].next;
@@ -152,28 +153,28 @@ int remover(LNSE *list, int i, int *removed_value) {
             list->tail = prev;
         }
     }
-    
-    *removed_value = list->vector[removed_idx].value;
-    enqueue(&list->freeQueue, removed_idx);
+
+    *removed_value = list->vector[removed_idx].data;
+    enqueue(&list->filalivre, removed_idx);
     list->size--;
     return 1; // Sucesso
 }
 
-// Busca o elemento x na lista e retorna sua posiÃ§Ã£o real
+// Busca o elemento x na lista e retorna sua posição real
 int buscar(LNSE *list, int x) {
     int current = list->head;
     int pos = 0;
     while(current != NULL_INDEX) {
-        if(list->vector[current].value == x) {
+        if(list->vector[current].data == x) {
             return pos;
         }
         current = list->vector[current].next;
         pos++;
     }
-    return -1; // Elemento nÃ£o encontrado
+    return -1; // Elemento não encontrado
 }
 
-// Retorna o nÃºmero de elementos na lista real
+// Retorna o número de elementos na lista real
 int size_list(LNSE *list) {
     return list->size;
 }
@@ -183,8 +184,8 @@ void clearList(LNSE *list, int capacity) {
     int current = list->head;
     while(current != NULL_INDEX) {
         int next_idx = list->vector[current].next;
-        enqueue(&list->freeQueue, current);
-        list->vector[current].value = 0;
+        enqueue(&list->filalivre, current);
+        list->vector[current].data = 0;
         list->vector[current].next = NULL_INDEX;
         current = next_idx;
     }
@@ -193,46 +194,46 @@ void clearList(LNSE *list, int capacity) {
     list->size = 0;
 }
 
-// Imprime a lista real, Ã­ndices de head e tail, e o conteÃºdo do vetor
+// Imprime a lista real, índices de head e tail, e o conteúdo do vetor
 void imprimir(LNSE *list, int capacity) {
     printf("\n--- Estado Atual da LNSE ---\n");
-    
+
     // Imprimir a lista real
     printf("Lista real: ");
     int current = list->head;
     while(current != NULL_INDEX) {
-        printf("%d -> ", list->vector[current].value);
+        printf("%d -> ", list->vector[current].data);
         current = list->vector[current].next;
     }
     printf("NULL\n");
-    
-    // Imprimir Ã­ndices de head e tail
+
+    // Imprimir índices de head e tail
     printf("Head index: %d\n", list->head);
     printf("Tail index: %d\n", list->tail);
-    
-    // Copiar os Ã­ndices livres da fila para um array temporÃ¡rio
+
+    // Copiar os índices livres da fila para um array temporário
     int freeIndices[MAX_CAPACITY];
     int freeSize = 0;
-    copyQueue(&list->freeQueue, freeIndices, &freeSize);
-    
-    // Criar um array para marcar quais Ã­ndices estÃ£o livres
+    copiarFila(&list->filalivre, freeIndices, &freeSize);
+
+    // Criar um array para marcar quais índices estão livres
     int isFree[MAX_CAPACITY];
     for(int i = 0; i < capacity; i++) {
-        isFree[i] = 0; // Inicialmente, todos estÃ£o ocupados
+        isFree[i] = 0; // Inicialmente, todos estão ocupados
     }
     for(int i = 0; i < freeSize; i++) {
         if(freeIndices[i] >= 0 && freeIndices[i] < capacity) {
             isFree[freeIndices[i]] = 1; // Marcar como livre
         }
     }
-    
-    // Imprimir o vetor com os Ã­ndices dos prÃ³ximos elementos
+
+    // Imprimir o vetor com os índices dos próximos elementos
     printf("Vetor:\n");
     for(int i = 0; i < capacity; i++) {
         if(isFree[i]) {
             printf("[%d]: (-)\n", i);
         } else {
-            printf("[%d]: %d -> ", i, list->vector[i].value);
+            printf("[%d]: %d -> ", i, list->vector[i].data);
             if(list->vector[i].next != NULL_INDEX) {
                 printf("%d\n", list->vector[i].next);
             } else {
@@ -240,5 +241,4 @@ void imprimir(LNSE *list, int capacity) {
             }
         }
     }
-    printf("-----------------------------\n");
 }
