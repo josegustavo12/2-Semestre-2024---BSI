@@ -124,6 +124,17 @@ int main() {
        imprimirB(&pilha);
        popB(&pilha);
 
+       printf ("\nLimpando a Pilha A...");
+       clearA (&pilha);
+       printf ("\nPilha A: [");
+       imprimirA (&pilha);
+       printf ("]");
+
+       printf ("\nLimpando a pilha B...");
+       clearB (&pilha);
+       printf ("\nPilha B: [");
+       imprimirB (&pilha);
+       printf("]");
 
     return 0;
 }
