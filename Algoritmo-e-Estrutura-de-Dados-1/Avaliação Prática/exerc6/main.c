@@ -8,58 +8,29 @@ int main()
 
     Tree* tree = createTree();
 
-    printf("\n\nInsert 17");
-    tree->root = insert(tree->root, 17);
+    tree->root = insert(tree->root, 61);
+    tree->root = insert(tree->root, 34);
+    tree->root = insert(tree->root, 19);
+    tree->root = insert(tree->root, 50);
+    tree->root = insert(tree->root, 20);
+    tree->root = insert(tree->root, 55);
+    tree->root = insert(tree->root, 67);
+    tree->root = insert(tree->root, 66);
+    tree->root = insert(tree->root, 64);
+    tree->root = insert(tree->root, 94);
+    tree->root = insert(tree->root, 70);
+    tree->root = insert(tree->root, 95);
 
-    printf("\n\nInsert 6");
-    tree->root = insert(tree->root, 6);
+    // printf("\nArvore: ");
+    // strPreorder(tree);
+    
+    int valor = 94;
+    printf("\nValor: %d", valor);
 
-    printf("\n\nInsert 35");
-    tree->root = insert(tree->root, 35);
+    int subnos = 0;
+    subnos = procurarecontarsubnodes(tree, valor);
+    printf("\nSubnós: %d", subnos);
 
-    printf("\n\nInsert 4");
-    tree->root = insert(tree->root, 4);
 
-    printf("\n\nInsert 14");
-    tree->root = insert(tree->root, 14);
 
-    printf("\n\nInsert 23");
-    tree->root = insert(tree->root, 23);
-
-    printf("\n\nInsert 48");
-    tree->root = insert(tree->root, 48);
-
-    printf("\n\nBuscar 14\n");
-    int achou = search(tree->root, 100);
-    printf("%d", achou);
-
-    Node* node = getMinNode(tree->root);
-    printf("\n\nMenor: %d", node->data);
-
-    node = getMaxNode(tree->root);
-    printf("\n\nMaior: %d", node->data);
-
-    printf("\n\nPercurso pré-ordem\n");
-    strPreorder(tree->root);
-
-    printf("\n\nPercurso em-ordem\n");
-    strInorder(tree->root);
-
-    printf("\n\nPercurso pós-ordem\n");
-    strPostorder(tree->root);
-
-    printf("\n\ndeleteNode(4)\n");
-    node = deleteNode(tree->root, 4, 'D');
-
-    node = getMinNode(tree->root);
-    printf("\n\nMenor: %d", node->data);
-
-    printf("\n\nPercurso pré-ordem\n");
-    strPreorder(tree->root);
-
-    printf("\n\nPercurso em-ordem\n");
-    strInorder(tree->root);
-
-    printf("\n\nPercurso pós-ordem\n");
-    strPostorder(tree->root);
 }
