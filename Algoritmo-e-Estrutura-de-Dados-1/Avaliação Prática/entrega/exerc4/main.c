@@ -3,6 +3,8 @@
 
 #include "listaDuplamenteLigada.h"
 
+// gcc -o programa main.c listaDuplamenteLigada.c -Wall
+
 int main()
 {
 

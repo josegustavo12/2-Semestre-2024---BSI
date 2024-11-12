@@ -65,31 +65,6 @@ int search( Node* node, int data ){
 
 }
 
-int contarsubndos(Node* node) {
-    if (node == NULL) {
-        return 0;
-    }
-    // conta o no atual e chama a função para contar os nos filhos
-    return 1 + contarsubndos(node->left) + contarsubndos(node->right);
-}
-
-
-int procurarecontarsubnodes(Node* node, int data) {
-    if (node == NULL) {
-        return 0;
-    }
-
-    if (data == node->data) {
-        return contarsubndos(node);
-    }
-
-    if (data < node->data) {
-        return procurarecontarsubnodes(node->left, data);
-    } else {
-        return procurarecontarsubnodes(node->right, data);
-    }
-}
-
 Node* getMaxNode( Node* node ){
 
     if (node == NULL){
@@ -197,5 +172,31 @@ void strPostorder(Node *node) {
         strPostorder(node->left);
         strPostorder(node->right);
         printf("%d ", node->data);
+    }
+}
+
+
+int contarsubndos(Node* node) {
+    if (node == NULL) {
+        return 0;
+    }
+    // conta o no atual e chama a função para contar os nos filhos
+    return 1 + contarsubndos(node->left) + contarsubndos(node->right);
+}
+
+
+int procurarecontarsubnodes(Node* node, int data) {
+    if (node == NULL) {
+        return 0;
+    }
+
+    if (data == node->data) {
+        return contarsubndos(node);
+    }
+
+    if (data < node->data) {
+        return procurarecontarsubnodes(node->left, data);
+    } else {
+        return procurarecontarsubnodes(node->right, data);
     }
 }

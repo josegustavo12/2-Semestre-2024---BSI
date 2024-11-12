@@ -1,0 +1,197 @@
+\section{Tipo Abstrato de Dados - TAD}
+
+\subsection{Definição}
+
+\begin{itemize}
+    \item \textbf{Tipo de dados:} Define o conjunto de \textbf{valores} e \textbf{operações} que uma variável pode assumir.
+    \begin{itemize}
+        \item Exemplos: \texttt{int}, \texttt{char}, \texttt{float}, \texttt{double}.
+    \end{itemize}
+
+    \item \textbf{Estrutura de dados:} Consiste em um \textbf{conjunto} de tipos de dados relacionados logicamente, com algum tipo de estrutura (pode ser uma sequência lógica ou física no sistema).
+    \begin{itemize}
+        \item Exemplos: \texttt{array}, \texttt{struct}, \texttt{union}, \texttt{enum}.
+    \end{itemize}
+
+    \item \textbf{TAD (Tipo Abstrato de Dados):} Um TAD é um conjunto de dados estruturados e as operações que podem ser realizadas sobre esses dados, implementadas através de funções. Ele é puramente teórico, simplifica a descrição de algoritmos abstratos, classifica e avalia as estruturas, ocultando os dados do usuário. O TAD deve ser visto como uma ``caixa preta'' para o usuário, que não tem acesso direto aos dados armazenados. A implementação do TAD foca no \textbf{que} ele faz, não em \textbf{como} ele faz. Geralmente, é dividido em dois modos: \textbf{interface} e \textbf{implementação}.
+\end{itemize}
+
+\subsubsection{Vantagens do uso de TAD}
+
+\begin{itemize}
+    \item \textbf{Encapsulamento:} Os detalhes de implementação são ocultados, expondo apenas o que é necessário para o usuário.
+    \item \textbf{Segurança:} Garante que os dados só possam ser manipulados através das operações permitidas.
+    \item \textbf{Flexibilidade:} Facilita a modificação da implementação sem impactar os usuários do TAD.
+    \item \textbf{Reutilização:} Permite a reutilização do TAD em diferentes contextos sem modificar sua implementação.
+\end{itemize}
+
+\subsubsection{O tipo \texttt{FILE}}
+
+O tipo \texttt{FILE} é uma estrutura que contém informações sobre um arquivo ou fluxo de texto. Essa estrutura é utilizada para realizar operações de entrada e saída sobre arquivos.
+
+Em C, é recomendado que não se manipule diretamente os campos dessa estrutura, e sim que se utilize um \textbf{ponteiro} para \texttt{FILE}:
+
+\begin{verbatim}
+FILE *f;
+\end{verbatim}
+
+O ponteiro \texttt{f} indica onde os dados estão armazenados, mas os dados em si não podem ser acessados diretamente. Para manipulá-los, é necessário utilizar funções específicas, como:
+
+\begin{itemize}
+    \item \texttt{fopen()} --- Abre um arquivo.
+    \item \texttt{fclose()} --- Fecha um arquivo.
+    \item \texttt{fputc()} --- Escreve um caractere no arquivo.
+    \item \texttt{fgetc()} --- Lê um caractere do arquivo.
+    \item \texttt{feof()} --- Verifica se o fim do arquivo foi atingido.
+\end{itemize}
+
+Essas funções garantem a manipulação segura dos arquivos.
+
+\subsubsection{O tipo opaco}
+
+Um \textbf{tipo opaco} é um tipo de dado cujo conteúdo é ocultado da interface pública. No TAD, por exemplo, a implementação dos dados é definida no arquivo \texttt{.c}, enquanto o arquivo \texttt{.h} expõe apenas a interface. Isso garante que os usuários do TAD não possam acessar diretamente os dados, apenas as operações permitidas.
+
+\subsubsection{Operações básicas de um TAD}
+
+\begin{itemize}
+    \item \textbf{Criação do TAD:} Inicializa a estrutura de dados.
+    \item \textbf{Inserção de um novo elemento no TAD:} Adiciona um elemento à estrutura.
+    \item \textbf{Remoção de um elemento do TAD:} Remove um elemento da estrutura.
+    \item \textbf{Acesso a um elemento do TAD:} Obtém informações sobre um elemento.
+    \item \textbf{Destruição do TAD:} Libera os recursos alocados pela estrutura.
+\end{itemize}
+
+\subsection{Modularizando o programa}
+
+Ao trabalhar com TADs em C, é comum modularizar o programa em dois arquivos:
+
+\begin{itemize}
+    \item \textbf{Arquivo \texttt{.h}:} Declara os protótipos das funções, tipos de ponteiros e dados globalmente acessíveis. Define a \textbf{interface} visível para o usuário.
+    \item \textbf{Arquivo \texttt{.c}:} Define os tipos de dados e implementa as funções. Esse arquivo contém a \textbf{implementação} oculta ao usuário.
+\end{itemize}
+
+A separação do TAD em dois arquivos é o processo de \textbf{modularização}.
+
+\subsection{Implementando um TAD: Ponto}
+
+Agora, vamos implementar um TAD que represente um ponto no plano cartesiano, definido por suas coordenadas \texttt{x} e \texttt{y}.
+
+\subsubsection{Arquivo \texttt{Ponto.h}}
+
+\begin{verbatim}
+typedef struct ponto Ponto;
+
+// Cria um novo ponto
+Ponto* Ponto_cria(float x, float y);
+
+// Libera um ponto
+void Ponto_libera(Ponto* p);
+
+// Acessa os valores de "x" e "y" de um ponto
+int Ponto_acessa(Ponto* p, float* x, float* y);
+
+// Atribui os valores de "x" e "y" de um ponto
+int Ponto_atribui(Ponto* p, float x, float y);
+
+// Calcula a distância entre dois pontos
+float Ponto_distancia(Ponto* p1, Ponto* p2);
+\end{verbatim}
+
+\subsubsection{Arquivo \texttt{Ponto.c}}
+
+\begin{verbatim}
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "Ponto.h" // Inclui os protótipos
+
+// Definição da estrutura interna (tipo opaco)
+struct ponto {
+    float x; // Coordenada x do ponto
+    float y; // Coordenada y do ponto
+};
+
+// Função que cria e retorna um novo ponto
+Ponto* Ponto_cria(float x, float y) {
+    Ponto* p = (Ponto*) malloc(sizeof(Ponto)); // Aloca memória para o ponto
+    if (p != NULL) {
+        p->x = x;
+        p->y = y;
+    }
+    return p; // Retorna o ponteiro para o ponto criado
+}
+
+// Função que libera a memória alocada para um ponto
+void Ponto_libera(Ponto* p) {
+    free(p); // Libera a memória do ponto
+}
+
+// Função que acessa os valores das coordenadas de um ponto
+int Ponto_acessa(Ponto* p, float* x, float* y) {
+    if (p == NULL) return 0; // Verifica se o ponto é válido
+    *x = p->x;
+    *y = p->y;
+    return 1; // Retorna 1 se a operação foi bem-sucedida
+}
+
+// Função que atribui novos valores às coordenadas de um ponto
+int Ponto_atribui(Ponto* p, float x, float y) {
+    if (p == NULL) return 0; // Verifica se o ponto é válido
+    p->x = x;
+    p->y = y;
+    return 1; // Retorna 1 se a operação foi bem-sucedida
+}
+
+// Função que calcula a distância entre dois pontos
+float Ponto_distancia(Ponto* p1, Ponto* p2) {
+    if (p1 == NULL || p2 == NULL) return -1; // Verifica se os pontos são válidos
+    float dx = p1->x - p2->x;
+    float dy = p1->y - p2->y;
+    return sqrt(dx * dx + dy * dy); // Retorna a distância euclidiana
+}
+\end{verbatim}
+
+\subsubsection{Função \texttt{main} para testar o TAD \texttt{Ponto}}
+
+\begin{verbatim}
+#include <stdio.h>
+#include "Ponto.h" // Inclui os protótipos do TAD Ponto
+
+int main() {
+    // Criação de dois pontos
+    Ponto* p1 = Ponto_cria(2.0, 3.0);
+    Ponto* p2 = Ponto_cria(5.0, 7.0);
+
+    // Acessa e imprime as coordenadas dos pontos
+    float x, y;
+    Ponto_acessa(p1, &x, &y);
+    printf("Ponto 1: (%.2f, %.2f)\n", x, y);
+    Ponto_acessa(p2, &x, &y);
+    printf("Ponto 2: (%.2f, %.2f)\n", x, y);
+
+    // Calcula e imprime a distância entre os dois pontos
+    float distancia = Ponto_distancia(p1, p2);
+    printf("Distância entre p1 e p2: %.2f\n", distancia);
+
+    // Modifica as coordenadas do ponto 1
+    Ponto_atribui(p1, 4.0, 6.0);
+    Ponto_acessa(p1, &x, &y);
+    printf("Ponto 1 atualizado: (%.2f, %.2f)\n", x, y);
+
+    // Libera a memória dos pontos
+    Ponto_libera(p1);
+    Ponto_libera(p2);
+
+    return 0;
+}
+\end{verbatim}
+
+\subsubsection{Explicação da função \texttt{main}}
+
+\begin{enumerate}
+    \item \textbf{Criação dos pontos}: Usa \texttt{Ponto\_cria} para inicializar dois pontos com coordenadas específicas.
+    \item \textbf{Acesso às coordenadas}: Usa \texttt{Ponto\_acessa} para obter os valores das coordenadas dos pontos.
+    \item \textbf{Cálculo da distância}: Utiliza \texttt{Ponto\_distancia} para calcular a distância entre os dois pontos.
+    \item \textbf{Modificação das coordenadas}: Usa \texttt{Ponto\_atribui} para alterar as coordenadas do ponto 1.
+    \item \textbf{Liberação de memória}: Usa \texttt{Ponto\_libera} para liberar a memória alocada.
+\end{enumerate}
