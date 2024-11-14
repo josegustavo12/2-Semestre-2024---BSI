@@ -60,10 +60,11 @@ int getSize(Lista* lista);
 
 // Função para imprimir a lista
 void printLista(Lista* lista);
+
 //Função para ordenar em ordem decrescente
 void ordenar(Lista* lista);
 
-//int buscaBinaria(Node* inicio, Node* tail, int valor);
+//Função para fazer a busca binária 
 int buscaBinaria(Lista* lista, int valor);
 
 #endif // LISTADUPLAMENTELIGADA_H_INCLUDED

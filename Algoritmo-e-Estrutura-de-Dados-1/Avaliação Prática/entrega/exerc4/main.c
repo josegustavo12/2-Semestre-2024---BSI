@@ -3,7 +3,7 @@
 
 #include "listaDuplamenteLigada.h"
 
-// gcc -o programa main.c listaDuplamenteLigada.c -Wall
+//  gcc -o programa main.c listaDuplamenteLigada.c -Wall
 
 int main()
 {
@@ -14,29 +14,33 @@ int main()
 
     printf("\nTamanho: %d", getSize(lista));
 
-
-    insertHead(lista, 10);
+   
+     insertHead(lista, 10);
     printLista(lista);
 
-    insertHead(lista, 5);
-    printLista(lista);
+     insertHead(lista, 5);
+     printLista(lista);
 
     insertTail(lista, 3);
     printLista(lista);
 
     insert(lista, 8, 2);
+     printLista(lista);
+
+
+     insertTail(lista, 9);
     printLista(lista);
 
 
-    insertTail(lista, 9);
+     insert(lista, 7, 4);
     printLista(lista);
 
 
+    printf("\nBusca antes de ordenar:");
 
-
-    insert(lista, 7, 4);
-    printLista(lista);
-
+    printf("\nbusca(5)");
+    int pos = buscar(lista,5);
+    printf("\nPosicao: %d", pos);
 
 
     ordenar(lista);
@@ -45,10 +49,11 @@ int main()
     printLista(lista);
 
 
+    printf("\nBusca depois de ordenar:");
 
-    printf("\n\nbusca(8)");
-    int pos = buscar(lista, 8);
-    printf("Posicao: %d", pos);
+    printf("\n\nbusca(5)");
+    int pos1 = buscar(lista,5);
+    printf("\nPosicao: %d \n", pos1);
 
 
 
