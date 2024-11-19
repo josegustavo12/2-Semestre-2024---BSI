@@ -22,6 +22,16 @@ int main()
     tree->root = insert(tree->root, 70);
     tree->root = insert(tree->root, 66);
     tree->root = insert(tree->root, 64);
+
+    printf("\n\nPercurso pre-ordem\n");
+    strPreorder(tree->root);
+
+    printf("\n\nPercurso em-ordem\n");
+    strInorder(tree->root);
+
+    printf("\n\nPercurso pos-ordem\n");
+    strPostorder(tree->root);
+
     int subnos = 0;
     int valor = 67;
     subnos = procurarecontarsubnodes(tree->root, valor);

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "ex1.h"
 
 // gcc -o programa main.c ex1.c -Wall
@@ -15,9 +16,9 @@ Fila stringparafila(int tamanho, const char *sequencia) {
             return filaVazia;  // Retorna a fila para main
         }
     }
-
+    int comprimento = strlen(sequencia);
     // Verifica se a sequência está vazia
-    if (sequencia == NULL || sequencia[0] == '\0' || sequencia[0] == ' ') {
+    if (sequencia == NULL || sequencia[0] == '\0' || sequencia[0] == ' ' || tamanho != comprimento) {
         printf("Tamanho ou sequência são inválidos\n\n");
         Fila filaVazia = {0}; //cria uma fila vazia
         return filaVazia;     //retorna a fila para main
@@ -49,9 +50,9 @@ int main() {
 
         // Com o valor retornado da função verificarBalanceamento, ele verifica se o valor � 0 (balanceada) diferente desse valor (n�o balanceada)
         if (resultado) {
-            printf("Resultado: Balanceado\n\n");
+            printf("Resultado teste 1: Balanceado\n\n");
         } else {
-            printf("Resultado: Não Balanceado\n\n");
+            printf("Resultado teste 1: Não Balanceado\n\n");
         }
     }
 
@@ -65,9 +66,9 @@ int main() {
 
         // Com o valor retornado da função verificarBalanceamento, ele verifica se o valor � 0 (balanceada) diferente desse valor (n�o balanceada)
         if (resultado) {
-            printf("Resultado: Balanceado\n\n");
+            printf("Resultado teste 2: Balanceado\n\n");
         } else {
-            printf("Resultado: Não Balanceado\n\n");
+            printf("Resultado teste 2: Não Balanceado\n\n");
         }
     }
 
@@ -82,9 +83,9 @@ int main() {
 
         // Com o valor retornado da função verificarBalanceamento, ele verifica se o valor � 0 (balanceada) diferente desse valor (n�o balanceada)
         if (resultado) {
-            printf("Resultado: Balanceado\n\n");
+            printf("Resultado teste 3: Balanceado\n\n");
         } else {
-            printf("Resultado: Não Balanceado\n\n");
+            printf("Resultado teste 3: Não Balanceado\n\n");
         }
     }
 
@@ -98,9 +99,26 @@ int main() {
 
         // Com o valor retornado da função verificarBalanceamento, ele verifica se o valor � 0 (balanceada) diferente desse valor (n�o balanceada)
         if (resultado) {
-            printf("Resultado: Balanceado\n\n");
+            printf("Resultado teste 4: Balanceado\n\n");
         } else {
-            printf("Resultado: Não Balanceado\n\n");
+            printf("Resultado teste 4: Não Balanceado\n\n");
+        }
+    }
+
+    
+    Fila teste5 = stringparafila(6, "{([])}))");    // Teste 4
+
+    if (teste5.size > 0) {  // Verifica se a fila foi criada corretamente
+        // Verifica se a sequencia está balanceada
+        int resultado = verificarBalanceamento(&teste4);
+
+        imprimir(&teste5);
+
+        // Com o valor retornado da função verificarBalanceamento, ele verifica se o valor � 0 (balanceada) diferente desse valor (n�o balanceada)
+        if (resultado) {
+            printf("Resultado teste 5: Balanceado\n\n");
+        } else {
+            printf("Resultado teste 5: Não Balanceado\n\n");
         }
     }
     return 0;

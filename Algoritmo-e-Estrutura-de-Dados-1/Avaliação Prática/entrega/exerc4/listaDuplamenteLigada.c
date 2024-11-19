@@ -92,6 +92,7 @@ void insert(Lista* lista, int valor, int position){
         }
         else{
 
+            //entender dps
             Node* novoNode = criarNode(valor);
 
             Node* auxNode = lista->head;
@@ -263,18 +264,16 @@ void printLista(Lista* lista){
 void ordenar(Lista* lista) {
     for (int j = getSize(lista); j > 0; j--) {
         Node* nohAtual = lista->head;
-        int sentinela = 0;
         for (int i = 0; i < j-1; i++) {
             if (nohAtual->valor < nohAtual->next->valor) {
                 // Trocar os valores
                 int temp = nohAtual->valor;
                 nohAtual->valor = nohAtual->next->valor;
                 nohAtual->next->valor = temp;
-                sentinela = i;
             }
             nohAtual = nohAtual->next;
         }
-        j = sentinela + 1;
+        
     }
     lista->ordenado = 1;
 }
