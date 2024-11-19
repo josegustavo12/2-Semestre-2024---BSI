@@ -26,7 +26,7 @@ jmp main
 
 
 mensagem : var #21
-static mensagem + #0, #'A'
+static mensagem + #0, #'V'
 static mensagem + #1, #'A'
 static mensagem + #2, #'A'
 static mensagem + #3, #'a'
@@ -56,7 +56,7 @@ mensagem2 : string "Ola Mundo!"
 main:
 	loadn r0, #0		; Posicao na tela onde a mensagem sera' escrita
 	loadn r1, #mensagem2	; Carrega r1 com o endereco do vetor que contem a mensagem
-	loadn r2, #0		; Seleciona a COR da Mensagem
+	loadn r2, #256		; Seleciona a COR da Mensagem
 	
 	call Imprimestr   ;  r0 = Posicao da tela que o primeiro caractere da mensagem sera' impresso;  r1 = endereco onde comeca a mensagem; r2 = cor da mensagem.   Obs: a mensagem sera' impressa ate' encontrar "/0"
 

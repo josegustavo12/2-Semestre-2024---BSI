@@ -7,7 +7,7 @@ jmp main
 
 ; ----------x--------------x-----------
 main:	; Inicio do codigo
-	loadn r0, #6	; Escolha o numero para o calculo do fatorial
+	loadn r0, #5	; Escolha o numero para o calculo do fatorial
 
 	call Fatorial	; Calcula o Fatorial de um numero (colocado em r0) e retorna o valor em r1
 
