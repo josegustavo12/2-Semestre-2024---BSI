@@ -215,6 +215,173 @@ As operações da fila incluem:
 - **Estrutura Circular**: A fila é circular, ou seja, o final da fila se conecta com o início, otimizando o uso de espaço.
 - **Capacidade fixa**: A fila tem uma capacidade pré-definida, então pode ocorrer overflow se tentarmos inserir um elemento quando a fila está cheia.
 
+
+## Arvore Binária:
+
+### Definição e Estrutura Básica
+   - Uma árvore é composta por nós, com um nó raiz e subárvores associadas.
+   - Cada nó possui um pai (exceto a raiz) e pode ter filhos. Nós sem filhos são folhas.
+
+### Características
+   - Altura: profundidade máxima entre raiz e folhas.
+   - Caminho: sequência entre dois nós.
+   - Relações hierárquicas: ancestral e descendente.
+
+### Tipos e Aplicações
+   - Árvores binárias: cada nó tem no máximo duas subárvores (esquerda e direita).
+   - Árvores binárias de busca (BST): facilitam buscas, com nós menores à esquerda e maiores à direita.
+   - Usos incluem busca, inteligência artificial, análise sintática e compressão de dados.
+
+### Operações em BST
+   - Inserção: adiciona nós seguindo regras de BST.
+   - Busca: verifica a presença de um elemento.
+   - Remoção: depende de o nó possuir zero, um ou dois filhos.
+   - - **Sem filhos:** 
+   - - - Apenas remove o valor normalmente
+   - - **Um filho:**
+   - - - O filho assume o lugar dele
+   - - **Dois filhos:**
+   - - - É substituido pelo nó mais à **esquerda** da **Subarvore direita** ou pelo nó mais à **direita** da **Subarvore esquerda**
+   - - - **Removendo o 6:**
+![](Data/remocaotreebin.png)
+   - Outros: encontrar mínimos, máximos, percursos (pré-ordem, pós-ordem, em-ordem).
+
+### Percursos em Árvore
+   - Pré-ordem: raiz → esquerda → direita.
+   - Em-ordem: esquerda → raiz → direita.
+   - Pós-ordem: esquerda → direita → raiz.
+
+
+
+### Estrutura
+
+#### Node
+```c
+typedef struct Node{
+
+    int data;
+    struct Node* left; // ponteiro para o nó para o lado esquerdo
+    struct Node* right; // ponteiro para o nó do lado direito
+
+} Node;
+```
+
+#### Tree
+```c
+typedef struct{
+    Node* root; // declaração da raiz
+}Tree;
+```
+
+
+### Implementação
+
+#### Create Node
+
+```c
+Node* createNode(int data){
+    Node* node = (Node*) malloc( sizeof(Node) );
+
+    node->data = data;
+    node->left = NULL;
+    node->right = NULL;
+
+    return node;
+}
+```
+A aplicação é meio """trivial""", não sei oq comentar
+
+#### Create Tree
+```c
+Tree* createTree(){
+    Tree* tree = (Tree*) malloc( sizeof(Tree) ); // alocando memoria para a árvore
+
+    tree->root = NULL; // apontando para a raiz
+    return tree;
+};
+```
+
+#### Inserir 
+
+```c
+Node* insert(Node* node, int data){
+
+  if (node == NULL){ // caso o nó não exista
+
+    Node* newNode = createNode(data);
+    printf("\n%d", newNode->data) // printando o valor inserido na árvore
+    return newNode;
+  }
+
+  // verifica se vai para o lado esquerdo
+  if (data < node->data){
+      node->left = insert(node->left, data);
+  }
+  // vai para o lado direito
+  else{
+      node->right = insert(node->right, data);
+  }
+  printf("\n%d", node->data);
+  return node;
+
+}
+```
+
+#### Detalhamento com um exemplo visual:
+#### Situação Inicial
+Considere a árvore abaixo, com os seguintes valores já inseridos:
+
+```
+        50
+       /  \
+     30    70
+    / \    / \
+  20  40  60  80
+```
+
+Agora, queremos inserir o valor **25**.
+#### Caminho Recursivo
+
+1. **Primeira chamada de `insert`**:
+   - Nó atual: **50**
+   - Comparação: `25 < 50` → o valor deve ser inserido na subárvore à esquerda.
+   - Próxima chamada: `insert(node->left, 25)` com o nó **30**.
+
+2. **Segunda chamada de `insert`**:
+   - Nó atual: **30**
+   - Comparação: `25 < 30` → o valor deve ser inserido na subárvore à esquerda.
+   - Próxima chamada: `insert(node->left, 25)` com o nó **20**.
+
+3. **Terceira chamada de `insert`**:
+   - Nó atual: **20**
+   - Comparação: `25 > 20` → o valor deve ser inserido na subárvore à direita.
+   - Próxima chamada: `insert(node->right, 25)` com o nó `nullptr`.
+
+4. **Quarta chamada de `insert`**:
+   - Nó atual: `nullptr`
+   - O nó é `nullptr`, então cria-se um novo nó com o valor **25** e ele é retornado.
+
+
+#### Árvore Final
+
+Após a inserção, a árvore fica assim:
+
+```
+        50
+       /  \
+     30    70
+    / \    / \
+  20  40  60  80
+    \
+     25
+```
+
+
+
+
+
+
+
 - - -
 
 # Anotações do livro "Estrutura de dados descomplicada em linguagem C" do André Backes.
