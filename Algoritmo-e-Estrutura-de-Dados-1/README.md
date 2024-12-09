@@ -236,13 +236,13 @@ As operações da fila incluem:
    - Inserção: adiciona nós seguindo regras de BST.
    - Busca: verifica a presença de um elemento.
    - Remoção: depende de o nó possuir zero, um ou dois filhos.
-   - - **Sem filhos:** 
-   - - - Apenas remove o valor normalmente
-   - - **Um filho:**
-   - - - O filho assume o lugar dele
-   - - **Dois filhos:**
-   - - - É substituido pelo nó mais à **esquerda** da **Subarvore direita** ou pelo nó mais à **direita** da **Subarvore esquerda**
-   - - - **Removendo o 6:**
+      - **Sem filhos:** 
+        - Apenas remove o valor normalmente
+      - **Um filho:**
+        - O filho assume o lugar dele
+      - **Dois filhos:**
+        - É substituido pelo nó mais à **esquerda** da **Subarvore direita** ou pelo nó mais à **direita** da **Subarvore esquerda**
+        - **Removendo o 6:**
 ![](Data/remocaotreebin.png)
    - Outros: encontrar mínimos, máximos, percursos (pré-ordem, pós-ordem, em-ordem).
 
@@ -276,7 +276,7 @@ typedef struct{
 
 ### Implementação
 
-#### Create Node
+### Create Node
 
 ```c
 Node* createNode(int data){
@@ -289,9 +289,8 @@ Node* createNode(int data){
     return node;
 }
 ```
-A aplicação é meio """trivial""", não sei oq comentar
 
-#### Create Tree
+### Create Tree
 ```c
 Tree* createTree(){
     Tree* tree = (Tree*) malloc( sizeof(Tree) ); // alocando memoria para a árvore
@@ -301,7 +300,7 @@ Tree* createTree(){
 };
 ```
 
-#### Inserir 
+### Inserir 
 
 ```c
 Node* insert(Node* node, int data){
@@ -377,12 +376,608 @@ Após a inserção, a árvore fica assim:
 ```
 
 
+### Search 
+
+```c
+int search( Node* node, int data ){
+
+    if (node == NULL){ // não está na arvore
+        return 0;
+    }
+
+    if (data == node->data){ // está na arvore e achou
+        return 1;
+    }
+
+    int achou;
+    // verifica se vai para o lado esquerdo
+    if (data < node->data){
+        achou = search(node->left, data); // reutiliza o search para procurar dentro do nó onde ele passou, achou recebe 0 ou 1 do return dos if's lá em cima
+    }
+    // vai para o lado direito
+    else{
+        achou = search(node->right, data);
+    }
+
+    return achou;
+
+}
+```
+#### Exemplo prático
+
+Considere a seguinte árvore binária de busca:
+
+```
+        8
+       / \
+      3   10
+     / \    \
+    1   6    14
+       / \   /
+      4   7 13
+```
+
+#### Exemplo 1: Buscar o valor `6`
+1. A busca começa no nó raiz, `8`. Como `6 < 8`, vamos para a subárvore esquerda (`3`).
+2. No nó `3`, `6 > 3`, então vamos para a subárvore direita (`6`).
+3. No nó `6`, `6 == 6`, retornamos `1` (valor encontrado).
+
+#### Exemplo 2: Buscar o valor `9`
+1. A busca começa no nó raiz, `8`. Como `9 > 8`, vamos para a subárvore direita (`10`).
+2. No nó `10`, `9 < 10`, então vamos para a subárvore esquerda (`NULL`).
+3. Como o nó é `NULL`, retornamos `0` (valor não encontrado).
+
+---
+
+#### Complexidade
+
+- **Melhor caso**: O valor é encontrado na raiz. Complexidade é \( O(1) \).
+- **Pior caso**: A busca percorre toda a altura da árvore. Para uma árvore balanceada, isso é \( O(\log n) \). Para uma árvore degenerada (parecida com uma lista), isso é \( O(n) \).
+
+
+### getmaxnode e getminnode
+- **getmaxnode:** vai o sempre para a esquerda, já que pelas regras é lá que está o maior valor
+- **getminnode:** vai o sempre para a direita, já que pelas regras é lá que está o menor valor
+
+### Delete Node
+
+```c
+
+Node* deleteNode( Node* node, int data,
+                    char filhoSubstituto){
+
+    if (node == NULL){
+        return node;
+    }
+
+    if (data < node->data){
+        node->left = deleteNode( node->left, data,
+                                      filhoSubstituto);
+    }
+    else if( data > node->data ){
+         node->right = deleteNode( node->right, data,
+                                      filhoSubstituto);
+    }
+    else{
+        // encontrou o noh que sera excluido
+        if(node->left == NULL){
+            Node* tempNode = node->right;
+            free(node);
+            return tempNode;
+        }
+        else if( node->right == NULL ){
+            Node* tempNode = node->left;
+            free(node);
+            return tempNode;
+        }
+        else{
+            // o noh possui dois filhos
+            Node* tempNode;
+            if( filhoSubstituto == 'D' ){
+                // o menor de todos do lado direito
+                tempNode = getMinNode(node->right);
+                node->data = tempNode->data;
+                node->right = deleteNode(node->right,
+                                        tempNode->data,
+                                        filhoSubstituto);
+            }
+            else{
+                // o maior de todos do lado esquerdo
+                tempNode = getMaxNode(node->left);
+                node->data = tempNode->data;
+                node->left = deleteNode(node->left,
+                                        tempNode->data,
+                                        filhoSubstituto);
+            }
+        }
+    } // fecha o else
+
+    return node;
+}
+
+```
+
+O código implementa uma função recursiva para excluir um nó de uma **árvore binária de busca (BST - Binary Search Tree)**. Ele trata diferentes casos de exclusão dependendo de como o nó-alvo está conectado à árvore (se é uma folha, tem um único filho ou dois filhos).
+
+Vamos detalhar cada parte da função:
+
+---
+
+### Entrada da função
+
+A função recebe:
+1. **`node`**: o nó atual da árvore onde estamos verificando.
+2. **`data`**: o valor que queremos excluir da árvore.
+3. **`filhoSubstituto`**: um caractere (`'D'` ou `'E'`) que indica como substituir o nó em caso de dois filhos:
+   - `'D'`: substituir pelo **menor valor** da subárvore direita.
+   - `'E'`: substituir pelo **maior valor** da subárvore esquerda.
+
+---
+
+### Passo a passo
+
+#### 1. **Caso base: nó vazio (`NULL`)**
+```c
+if (node == NULL){
+    return node;
+}
+```
+- Se o nó atual for `NULL`, a função simplesmente retorna `NULL`, indicando que a árvore ou subárvore está vazia (ou o valor não foi encontrado).
+
+---
+
+#### 2. **Busca pelo nó a ser excluído**
+```c
+if (data < node->data){
+    node->left = deleteNode(node->left, data, filhoSubstituto);
+}
+else if (data > node->data){
+    node->right = deleteNode(node->right, data, filhoSubstituto);
+}
+```
+- Se o valor a ser excluído (`data`) for **menor** que o valor do nó atual (`node->data`), a função continua a busca na subárvore **esquerda**.
+- Se for **maior**, continua a busca na subárvore **direita**.
+
+---
+
+#### 3. **Nó encontrado**
+Quando o valor a ser excluído é igual ao valor do nó atual:
+```c
+else {
+    // encontrou o noh que sera excluido
+```
+A exclusão depende do número de filhos do nó.
+
+##### Caso 1: Nó sem filhos ou com um único filho
+1. **Sem filho à esquerda**:
+   ```c
+   if (node->left == NULL){
+       Node* tempNode = node->right;
+       free(node);
+       return tempNode;
+   }
+   ```
+   - Se o nó não possui filho à esquerda, retornamos o filho à direita (que pode ser `NULL`).
+   - O nó atual é excluído com `free(node)`.
+
+2. **Sem filho à direita**:
+   ```c
+   else if (node->right == NULL){
+       Node* tempNode = node->left;
+       free(node);
+       return tempNode;
+   }
+   ```
+   - Similar ao caso anterior, mas retornamos o filho à esquerda.
+
+---
+
+##### Caso 2: Nó com dois filhos
+Se o nó tem **dois filhos**:
+```c
+else {
+    // o noh possui dois filhos
+```
+- Precisamos encontrar um substituto para o nó excluído e garantir que a propriedade da árvore binária de busca seja preservada.
+
+1. **Substituir pelo menor valor da subárvore direita** (caso `'D'`):
+   ```c
+   if (filhoSubstituto == 'D') {
+       tempNode = getMinNode(node->right);
+       node->data = tempNode->data;
+       node->right = deleteNode(node->right, tempNode->data, filhoSubstituto);
+   }
+   ```
+   - O menor valor da subárvore direita (`getMinNode`) será o próximo nó em ordem, garantindo que a estrutura da árvore permaneça válida.
+   - Após substituir o valor do nó atual pelo valor do menor nó, excluímos o menor nó da subárvore direita recursivamente.
+
+2. **Substituir pelo maior valor da subárvore esquerda** (caso `'E'`):
+   ```c
+   else {
+       tempNode = getMaxNode(node->left);
+       node->data = tempNode->data;
+       node->left = deleteNode(node->left, tempNode->data, filhoSubstituto);
+   }
+   ```
+   - Similar ao caso anterior, mas substituímos pelo maior valor da subárvore esquerda (`getMaxNode`).
+   - Após substituir o valor do nó atual, o maior nó da subárvore esquerda é excluído recursivamente.
+
+### Retorno
+```c
+return node;
+```
+- Após ajustar a árvore (removendo o nó ou ajustando as subárvores), retornamos o nó atualizado.
+
+### Exemplo Prático
+
+Considere a seguinte árvore inicial:
+
+```
+        10
+       /  \
+      5    15
+     / \     \
+    3   7     20
+```
+
+#### Caso 1: Excluir o nó com valor `5` usando o menor da subárvore direita:
+1. Encontramos `5` e verificamos que ele possui dois filhos (`3` e `7`).
+2. O menor valor da subárvore direita é `7`. Substituímos `5` por `7`.
+3. Excluímos `7` da subárvore direita.
+4. Árvore resultante:
+   ```
+        10
+       /  \
+      7    15
+     /       \
+    3         20
+   ```
+
+As três funções apresentadas realizam percursos (ou **traversals**) de uma **árvore binária** em diferentes ordens. O percurso de uma árvore define a sequência em que os nós da árvore são visitados. Vou detalhar cada uma delas.
+
+---
+
+### 1. **Pré-ordem (Preorder)**
+
+```c
+void strPreorder(Node *node){
+    if( node != NULL ){
+        printf("%d ", node->data );
+        strPreorder(node->left);
+        strPreorder(node->right);
+    }
+}
+```
+
+#### Ordem de visita:
+1. Visita o nó **atual** primeiro (raiz).
+2. Percorre a subárvore **esquerda**.
+3. Percorre a subárvore **direita**.
+
+#### Aplicações:
+- Usada para **copiar árvores**.
+- Útil para avaliar ou converter expressões aritméticas representadas como árvores.
+
+#### Exemplo:
+Para a árvore:
+
+```
+        10
+       /  \
+      5    15
+     / \     \
+    3   7     20
+```
+
+O percurso em pré-ordem será:
+
+```
+10 5 3 7 15 20
+```
+
+---
+
+### 2. **Em ordem (Inorder)**
+
+```c
+void strInorder(Node *node) {
+    if (node != NULL) {
+        strInorder(node->left);
+        printf("%d ", node->data);
+        strInorder(node->right);
+    }
+}
+```
+
+#### Ordem de visita:
+1. Percorre a subárvore **esquerda** primeiro.
+2. Visita o nó **atual**.
+3. Percorre a subárvore **direita**.
+
+#### Aplicações:
+- Usada para **ordenar** os elementos em uma **árvore binária de busca (BST)**, pois o percurso em ordem retorna os elementos em **ordem crescente**.
+- Comumente usada para recuperar informações armazenadas em árvores de busca.
+
+#### Exemplo:
+Para a mesma árvore:
+
+```
+        10
+       /  \
+      5    15
+     / \     \
+    3   7     20
+```
+
+O percurso em ordem será:
+
+```
+3 5 7 10 15 20
+```
 
 
 
+### 3. **Pós-ordem (Postorder)**
+
+```c
+void strPostorder(Node *node) {
+    if (node != NULL) {
+        strPostorder(node->left);
+        strPostorder(node->right);
+        printf("%d ", node->data);
+    }
+}
+```
+
+#### Ordem de visita:
+1. Percorre a subárvore **esquerda**.
+2. Percorre a subárvore **direita**.
+3. Visita o nó **atual**.
+
+#### Aplicações:
+- Usada para **excluir ou liberar memória** de uma árvore, pois o nó só é visitado depois que suas subárvores já foram processadas.
+- Também útil em **cálculo de expressões**, onde primeiro se resolvem os operandos antes do operador (exemplo: árvores de expressão).
+
+#### Exemplo:
+Para a mesma árvore:
+
+```
+        10
+       /  \
+      5    15
+     / \     \
+    3   7     20
+```
+
+O percurso em pós-ordem será:
+
+```
+3 7 5 20 15 10
+```
+
+---
+
+#### Resumo das Ordens
+
+Para a mesma árvore:
+
+```
+        10
+       /  \
+      5    15
+     / \     \
+    3   7     20
+```
+
+| Tipo        | Sequência          |
+|-------------|--------------------|
+| Pré-ordem   | 10 5 3 7 15 20     |
+| Em ordem    | 3 5 7 10 15 20     |
+| Pós-ordem   | 3 7 5 20 15 10     |
 
 
-- - -
+## Outros tipos de árvores
+Vou reescrever **apenas** as funções que mudarem alguma coisa
+
+
+## Árvores AVL:
+
+[Referência](https://www.youtube.com/watch?v=3zmjQlJhBLM&ab_channel=RodrigoGuerra)
+
+### Definição e Estrutura Básica
+
+- A principal característica das árvores AVL é garantir que, para cada nó, a diferença entre a altura das subárvores esquerda e direita (o **fator de balanceamento**) seja no máximo **1**.
+
+### Características
+- **Altura balanceada**: Mantém a altura da árvore aproximadamente O(log n), o que melhora a eficiência das operações.
+- **Fator de balanceamento ou Equilibrio**:
+  - é medido subtraindo o número de níveis na sub-árvore da esquerda menos o número de níveis da sub-árvore da direita. 
+  - O valor tem que estar dentro do intervalo de -1 e +1 para que ele esteja balanceado
+### Tipos e Aplicações
+- As árvores AVL são usadas em cenários onde são necessárias buscas rápidas e inserções/remoções balanceadas.
+- Exemplos: sistemas de banco de dados, dicionários dinâmicos, algoritmos de compressão, e problemas onde eficiência na busca é crítica.
+
+---
+
+### Operações em Árvores AVL
+
+#### **1. Inserção**
+- A inserção é feita como em uma árvore binária de busca.
+- Após a inserção, verifica-se o fator de balanceamento de cada nó ancestral até a raiz.
+- Se o fator de balanceamento for violado 
+(FB > 1) ou (FB < -1), uma **rotação** é realizada.
+
+#### **2. Rotação**
+As rotações corrigem o desbalanceamento e existem quatro tipos:
+
+1. **Rotação simples à direita (LL)**:
+
+    - Filho da esquerda vira nova raiz
+    - Filho da direita de filho da esquerda vira fiho da esquerda do filho da direita
+    - a raiz original vira filho da direita da nova raiz
+
+   ```
+   novaRaiz = raiz.esquerda
+  raiz.esquerda = novaRaiz.direita
+  novaRaiz.direita = raiz
+   ```
+
+   ```
+          5
+         /
+        3
+       / \
+      2   6
+   ```  
+   Após a rotação:
+   ```
+        3
+       / \
+      2   5
+   ```
+
+2. **Rotação simples à esquerda (RR)**:
+
+    - Filho da direita vira nova raiz
+    - Filho da esquerda de filho da direita vira fiho da direita do filho da esquerda
+    - a raiz original vira filho da esquerda da nova raiz
+- **Pseudocódigo**
+   ```
+   novaRaiz = raiz.direita
+  raiz.direita = novaRaiz.esquerda
+  novaRaiz.esquerda = raiz
+   ```
+- **Exemplo prático**
+   ```
+      1
+       \
+        3
+       / \
+      2   5
+   ```
+   **Após a rotação:**
+   ```
+        3
+       / \
+      1   5
+       \
+        2
+   ```
+
+3. **Rotação dupla à direita (LR)**: Corrige o desbalanceamento gerado por inserções na subárvore direita da subárvore esquerda.
+   ```
+          5
+         /
+        2
+         \
+          3
+   ```
+   Após a rotação:
+   ```
+        3
+       / \
+      2   5
+   ```
+
+4. **Rotação dupla à esquerda (RL)**: Corrige o desbalanceamento gerado por inserções na subárvore esquerda da subárvore direita.
+   ```
+      2
+       \
+        5
+       /
+      3
+   ```
+   Após a rotação:
+   ```
+        3
+       / \
+      2   5
+   ```
+
+---
+
+#### **3. Busca**
+- A busca é idêntica à de uma árvore binária de busca normal.
+- O tempo de execução é O(log n) devido à propriedade de balanceamento da AVL.
+
+---
+
+#### **4. Remoção**
+- A remoção também segue as mesmas regras de uma árvore binária de busca:
+  1. **Sem filhos**: O nó é simplesmente removido.
+  2. **Um filho**: O nó é removido, e seu único filho ocupa seu lugar.
+  3. **Dois filhos**: O nó é substituído pelo menor valor da subárvore direita ou pelo maior valor da subárvore esquerda.
+- Após a remoção, verifica-se o fator de balanceamento e, se necessário, rotaciona-se para corrigir o desbalanceamento.
+
+---
+
+### Exemplo de Operações na AVL
+
+#### Inserção
+Considere inserir os valores `10`, `20`, e `30` em uma AVL inicialmente vazia:
+
+1. Insere `10`:
+   ```
+      10
+   ```
+
+2. Insere `20`:
+   ```
+      10
+        \
+         20
+   ```
+
+3. Insere `30`:
+   ```
+      10
+        \
+         20
+           \
+            30
+   ```
+   - O fator de balanceamento do nó `10` é `-2`. Uma **rotação simples à esquerda** é feita:
+   ```
+        20
+       /  \
+      10   30
+   ```
+
+#### Remoção
+Considere remover `10` da AVL resultante:
+1. Remove `10`:
+   ```
+        20
+          \
+           30
+   ```
+2. O fator de balanceamento do nó `20` ainda está dentro de \(-1\), \(0\), \(1\), então não é necessário ajustar mais nada.
+
+---
+
+### Vantagens da AVL
+
+- As operações de busca, inserção e remoção têm complexidade garantida de \( O(\log n) \).
+- Ideal para cenários onde o número de operações de busca é muito maior que as operações de modificação.
+
+### Desvantagens
+
+- O balanceamento automático (as rotações) adiciona complexidade às operações de inserção e remoção.
+- Para inserções/remoções muito frequentes, estruturas como árvores **Red-Black** podem ser mais eficientes.
+
+---
+
+### Resumo: Operações na AVL
+
+| Operação  | Descrição                              | Complexidade |
+|-----------|----------------------------------------|--------------|
+| Inserção  | Inserir como BST e corrigir com rotações | O(log n) |
+| Busca     | Igual à BST                            | O(log n) |
+| Remoção   | Remover como BST e corrigir com rotações | O(log n)|
+
+Se precisar de mais detalhes ou um exemplo prático, é só pedir!
+
+---
 
 # Anotações do livro "Estrutura de dados descomplicada em linguagem C" do André Backes.
 
