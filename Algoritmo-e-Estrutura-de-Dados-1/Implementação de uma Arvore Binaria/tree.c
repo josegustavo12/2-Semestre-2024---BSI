@@ -3,23 +3,23 @@
 
 #include "tree.h"
 
-Tree* createTree(){
+Node* createNode(int data){
+    Node* node = (Node*) malloc( sizeof(Node) );
 
-    Tree* tree = (Tree*)malloc(sizeof(tree)); // aloca espaço para criar a árvore
-    tree->root = NULL;
-    tree->size = 0;
-    return tree;
+    node->data = data;
+    node->left = NULL;
+    node->right = NULL;
 
+    return node;
 }
 
-Node* createNode(int data){
+Tree* createTree(){
+    Tree* tree = (Tree*) malloc( sizeof(Tree) );
 
-    Node* node = (Node*)malloc(sizeof(Node)); // aloca memória para o nó
-    node->data = data;
-    node->direita = NULL; //valor a direita e esquerda são nulos
-    node->esquerda = NULL;
+    tree->root = NULL;
+    return tree;
+};
 
-} // função para criar o nó (estrutura do elemento da árvore)
 Node* insert( Node* node, int data ){
 
     if (node == NULL){
@@ -30,16 +30,16 @@ Node* insert( Node* node, int data ){
 
     // verifica se vai para o lado esquerdo
     if (data < node->data){
-        node->esquerda = insert(node->esquerda, data);
+        node->left = insert(node->left, data);
     }
     // vai para o lado direito
     else{
-        node->direita = insert(node->direita, data);
+        node->right = insert(node->right, data);
     }
 
     printf("\n%d", node->data);
     return node;
-} // função para inserir o elemento dentro de uma árvore; Parametros: Node* node -> estrutura do nó que irá inserir, data -> valor do elemento
+}
 
 int search( Node* node, int data ){
 
@@ -54,82 +54,124 @@ int search( Node* node, int data ){
     int achou;
     // verifica se vai para o lado esquerdo
     if (data < node->data){
-        achou = search(node->esquerda, data);
+        achou = search(node->left, data);
     }
     // vai para o lado direito
     else{
-        achou = search(node->direita, data);
+        achou = search(node->right, data);
     }
 
     return achou;
 
 }
 
-Node* getMaxNode(Node* node){
+Node* getMaxNode( Node* node ){
 
     if (node == NULL){
         return NULL;
     }
 
-    if (node->direita == NULL){
+    if (node->right == NULL){
         return node;
     }
 
-    return getMaxNode(node->direita);
+    return getMaxNode( node->right );
 
 }
-Node* getMinNode(Node* node){
+
+Node* getMinNode( Node* node ){
 
     if (node == NULL){
         return NULL;
     }
 
-    if (node->esquerda == NULL){
+    if (node->left == NULL){
         return node;
     }
 
-    return getMinNode(node->esquerda);
+    return getMinNode( node->left );
 
 }
 
-Node* deleteNode(Node* node, int data, char filhoSubstituto){
+Node* deleteNode( Node* node, int data,
+                    char filhoSubstituto){
 
     if (node == NULL){
         return node;
     }
 
     if (data < node->data){
-        node->esquerda = deleteNode(node->esquerda, data, filhoSubstituto); // procura o valor recursivamente 
+        node->left = deleteNode( node->left, data,
+                                      filhoSubstituto);
     }
-    else if (data > node->data){
-        node->direita = deleteNode(node->direita, data, filhoSubstituto); // Corrigido para direita
+    else if( data > node->data ){
+         node->right = deleteNode( node->right, data,
+                                      filhoSubstituto);
     }
-    else{ // encontrou o nó que será excluído
-        if (node->esquerda == NULL){ 
-            Node* tempNode = node->direita;
+    else{
+        // encontrou o noh que sera excluido
+        if(node->left == NULL){
+            Node* tempNode = node->right;
             free(node);
             return tempNode;
         }
-        else if (node->direita == NULL){ 
-            Node* tempNode = node->esquerda;
+        else if( node->right == NULL ){
+            Node* tempNode = node->left;
             free(node);
             return tempNode;
         }
-        else { // o nó possui dois filhos
-            Node* tempNode; 
-            if (filhoSubstituto == 'D'){ // Correção: comparação de char
-                // pegar o menor de todos do lado direito
-                tempNode = getMinNode(node->direita);
+        else{
+            // o noh possui dois filhos
+            Node* tempNode;
+            if( filhoSubstituto == 'D' ){
+                // o menor de todos do lado direito
+                tempNode = getMinNode(node->right);
                 node->data = tempNode->data;
-                node->direita = deleteNode(node->direita, tempNode->data, filhoSubstituto); // Corrigido para passar o valor de tempNode->data
+                node->right = deleteNode(node->right,
+                                        tempNode->data,
+                                        filhoSubstituto);
             }
-            else if (filhoSubstituto == 'E'){ // Correção: comparação de char
-                // pegar o maior de todos do lado esquerdo
-                tempNode = getMaxNode(node->esquerda);
+            else{
+                // o maior de todos do lado esquerdo
+                tempNode = getMaxNode(node->left);
                 node->data = tempNode->data;
-                node->esquerda = deleteNode(node->esquerda, tempNode->data, filhoSubstituto); // Corrigido para passar o valor de tempNode->data
+                node->left = deleteNode(node->left,
+                                        tempNode->data,
+                                        filhoSubstituto);
             }
-        }  
-    }
-    return node; // Retorna o nó atualizado após a remoção
+        }
+    } // fecha o else
+
+    return node;
 }
+
+void strPreorder(Node *node){
+    if( node != NULL ){
+
+        printf("%d ", node->data );
+        strPreorder(node->left);
+        strPreorder(node->right);
+    }
+}
+
+
+// Função para percorrer a árvore em ordem
+void strInorder(Node *node) {
+    if (node != NULL) {
+
+        strInorder(node->left);
+        printf("%d ", node->data);
+        strInorder(node->right);
+    }
+}
+
+// Função para percorrer a árvore em pós-ordem
+void strPostorder(Node *node) {
+    if (node != NULL) {
+
+        strPostorder(node->left);
+        strPostorder(node->right);
+        printf("%d ", node->data);
+    }
+}
+
